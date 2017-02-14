@@ -80,7 +80,7 @@
 							
 							<!-- 开始循环 -->	
 							
-										<tr ng-repeat="var in varList" ng-if="(QX.cha != 0)">
+										<tr ng-repeat="var in varList" ng-if="(QX.cha == 1)">
 											<td class='center'>
 												<label class="pos-rel"><input type='checkbox' name='ids' value="{{var.COMPANY_ID}}" class="ace" /><span class="lbl"></span></label>
 											</td>
@@ -141,11 +141,11 @@
 										</tr>
 									
 									
-										<tr ng-show="{{QX.cha == 0}}">
+										<tr ng-if="(QX.cha == 0)">
 											<td colspan="100" class="center">您无权查看</td>
 										</tr>
 								
-									<tr class="main_info">
+									<tr class="main_info" ng-if="(model.varList.length < 1)">
 										<td colspan="100" class="center" >没有相关数据</td>
 									</tr>
 								
@@ -155,8 +155,8 @@
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;">
-									<a ng-show="(QX.add == 1)" class="btn btn-mini btn-success" onclick="add();">新增</a>
-									<a ng-show="(QX.del == 1)" class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
+									<a ng-if="(QX.add == 1)" class="btn btn-mini btn-success" onclick="add();">新增</a>
+									<a ng-if="(QX.del == 1)" class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i>Del</a>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
@@ -362,84 +362,82 @@
 		}
 		
 		'use strict';
-		 
-		angular.module('app',[]).factory('CompanyService', ['$http', '$q', function($http, $q){
-		 
-		    var REST_SERVICE_URI = 'company/listSvc/';
-		 
-		    var factory = {
-		        fetchAllCompanys: fetchAllCompanys,
-		        createCompany: createCompany,
-		        updateCompany:updateCompany,
-		        deleteCompany:deleteCompany
-		    };
-		 
-		    return factory;
-		 
-		    function fetchAllCompanys() {
-		        var deferred = $q.defer();
-		        $http.get(REST_SERVICE_URI,{datatype:"json"})
-		            .then(
-		            function (response) {
-		            	console.log("json=", response.data);
-		                deferred.resolve(response.data);
-		            },
-		            function(errResponse){
-		                console.error('Error while fetching Company');
-		                deferred.reject(errResponse);
-		            }
-		        );
-		        return deferred.promise;
-		    }
-		 
-		    function createCompany(company) {
-		        var deferred = $q.defer();
-		        $http.post(REST_SERVICE_URI, company)
-		            .then(
-		            function (response) {
-		                deferred.resolve(response.data);
-		            },
-		            function(errResponse){
-		                console.error('Error while creating company');
-		                deferred.reject(errResponse);
-		            }
-		        );
-		        return deferred.promise;
-		    }
-		 
-		 
-		    function updateCompany(company, id) {
-		        var deferred = $q.defer();
-		        $http.put(REST_SERVICE_URI+id, company)
-		            .then(
-		            function (response) {
-		                deferred.resolve(response.data);
-		            },
-		            function(errResponse){
-		                console.error('Error while updating company');
-		                deferred.reject(errResponse);
-		            }
-		        );
-		        return deferred.promise;
-		    }
-		 
-		    function deleteCompany(id) {
-		        var deferred = $q.defer();
-		        $http.delete(REST_SERVICE_URI+id)
-		            .then(
-		            function (response) {
-		                deferred.resolve(response.data);
-		            },
-		            function(errResponse){
-		                console.error('Error while deleting company');
-		                deferred.reject(errResponse);
-		            }
-		        );
-		        return deferred.promise;
-		    }
-		 
-		}]).controller('myCtrl', ['$scope', 'CompanyService', function($scope, CompanyService) {
-			$scope.QX = {add: '', del:'', edit:'', cha:''};
+		 var app = angular.module("app",[]);
+		 app.factory('serviceFactory', function($http, $q){
+			 var REST_SERVICE_URI = 'company/listSvc/';
+			 
+			    var factory = {
+			        fetchAllCompanys: fetchAllCompanys,
+			        createCompany: createCompany,
+			        updateCompany:updateCompany,
+			        deleteCompany:deleteCompany
+			    };
+			    function fetchAllCompanys() {
+			        var deferred = $q.defer();
+			        $http.get(REST_SERVICE_URI,{datatype:"json"})
+			            .then(
+			            function (response) {
+			            	console.log("json=", response.data);
+			                deferred.resolve(response.data);
+			            },
+			            function(errResponse){
+			                console.error('Error while fetching Company');
+			                deferred.reject(errResponse);
+			            }
+			        );
+			        return deferred.promise;
+			    }
+			 
+			    function createCompany(company) {
+			        var deferred = $q.defer();
+			        $http.post(REST_SERVICE_URI, company)
+			            .then(
+			            function (response) {
+			                deferred.resolve(response.data);
+			            },
+			            function(errResponse){
+			                console.error('Error while creating company');
+			                deferred.reject(errResponse);
+			            }
+			        );
+			        return deferred.promise;
+			    }
+			 
+			 
+			    function updateCompany(company, id) {
+			        var deferred = $q.defer();
+			        $http.put(REST_SERVICE_URI+id, company)
+			            .then(
+			            function (response) {
+			                deferred.resolve(response.data);
+			            },
+			            function(errResponse){
+			                console.error('Error while updating company');
+			                deferred.reject(errResponse);
+			            }
+			        );
+			        return deferred.promise;
+			    }
+			 
+			    function deleteCompany(id) {
+			        var deferred = $q.defer();
+			        $http.delete(REST_SERVICE_URI+id)
+			            .then(
+			            function (response) {
+			                deferred.resolve(response.data);
+			            },
+			            function(errResponse){
+			                console.error('Error while deleting company');
+			                deferred.reject(errResponse);
+			            }
+			        );
+			        return deferred.promise;
+			    }
+			    return factory;
+		 });
+		
+		app.controller('myCtrl', function($scope, serviceFactory) {
+			$scope.QX = {};
 			var self = this;
 		    self.user={id:null,username:'',address:'',email:''};
 		    self.companys=[];
@@ -453,13 +451,13 @@
 		    fetchAllCompanys();
 		 
 		    function fetchAllCompanys(){
-		    	CompanyService.fetchAllCompanys()
+		    	serviceFactory.fetchAllCompanys()
 		            .then(
 		            function(d) {
 		            	console.log("what is it = ?" + d);
 		            	$scope.varList = d.model.varList;
 		            	$scope.QX = {add: d.model.QX.add, cha: d.model.cha, del: d.model.del, edit: d.model.edit};
-		            	console.log("what is it$scope.QX = ?" + $scope.QX.add);
+		            	console.log("what is it$scope.QX = ?" + $scope.QX);
 		            },
 		            function(errResponse){
 		                console.error('Error while fetching Companys');
@@ -532,7 +530,7 @@
 //		        $scope.myForm.$setPristine(); //reset Form
 //		    }
 		 
-		}]);
+		});
 	</script>
 
 

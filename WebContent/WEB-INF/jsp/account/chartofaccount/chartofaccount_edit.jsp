@@ -33,7 +33,9 @@
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Ledger Code:</td>
-								<td><input type="text" name="LEDGER_CODE" id="LEDGER_CODE" value="${pd.LEDGER_CODE}" maxlength="6" placeholder="这里输入Ledger Code" title="Ledger Code" style="width:98%;"/></td>
+								<td><input type="text" name="LEDGER_CODE" id="LEDGER_CODE" value="${pd.LEDGER_CODE}" maxlength="6" 
+								<c:if test="${null != pd.CHARTOFACCOUNT_ID}">readonly="readonly"</c:if>
+								placeholder="这里输入Ledger Code" title="Ledger Code" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Description:</td>
@@ -41,11 +43,26 @@
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Account Type:</td>
-								<td><input type="text" name="ACCOUNT_TYPE" id="ACCOUNT_TYPE" value="${pd.ACCOUNT_TYPE}" maxlength="20" placeholder="这里输入Account Type" title="Account Type" style="width:98%;"/></td>
+								<td>
+									<select class="chosen-select form-control" name="ACCOUNT_TYPE" id="ACCOUNT_TYPE" 
+									<c:if test="${null != pd.CHARTOFACCOUNT_ID}">readonly="readonly"</c:if>
+									data-placeholder="General Ledger Type" style="vertical-align:top;width: 98%;">
+									<option value="${pd.ACCOUNT_TYPE}" selected="selected">${pd.ACCOUNT_TYPE}</option>
+									<option value="ASSETS">ASSETS</option>
+									<option value="LIABILITY">LIABILITY</option>
+									<option value="EQUITY">EQUITY</option>
+									<option value="SALES">SALES</option>
+									<option value="EXPENSES">EXPENSES</option>
+									<option value="COG">COST OF GOODS SOLD</option>
+									<option value="GROSSPROFIT">GROSS PROFIT</option>
+								  	</select>
+								</td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Control Account:</td>
-								<td><input type="number" name="CONTROL_ACCOUNT" id="CONTROL_ACCOUNT" value="${pd.CONTROL_ACCOUNT}" maxlength="32" placeholder="这里输入Control Account" title="Control Account" style="width:98%;"/></td>
+								<td>
+								<input type="hidden" id="CONTROL_ACCOUNT" name="CONTROL_ACCOUNT" value="0">
+								</td>
 							</tr>
 							<tr>
 								<td style="text-align: center;" colspan="10">

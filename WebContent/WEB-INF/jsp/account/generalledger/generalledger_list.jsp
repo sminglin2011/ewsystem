@@ -30,7 +30,7 @@
 					<div class="row">
 						<div class="col-xs-12">
 							
-						<!-- 检索  -->
+						<!-- 检索  
 						<form action="generalledger/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
@@ -58,7 +58,8 @@
 								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
 							</tr>
 						</table>
-						<!-- 检索  -->
+						</form>
+						检索  -->
 					
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
@@ -168,7 +169,7 @@
 							</tr>
 						</table>
 						</div>
-						</form>
+						
 					
 						</div>
 						<!-- /.col -->

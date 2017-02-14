@@ -41,17 +41,17 @@
 						<#elseif var[1] == 'Integer'>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">${var[2] }:</td>
-								<td><input type="number" name="${var[0] }" id="${var[0] }" value="${r"${pd."}${var[0] }${r"}"}" maxlength="32" placeholder="这里输入${var[2] }" title="${var[2] }" style="width:98%;"/></td>
+								<td><input type="number" name="${var[0] }" id="${var[0] }" value="${r"${pd."}${var[0] }${r"}"}" maxlength="32" placeholder="${var[2] }" title="${var[2] }" style="width:98%;"/></td>
 							</tr>
 						<#elseif var[1] == 'Double'>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">${var[2] }:</td>
-								<td><input type="number" name="${var[0] }" id="${var[0] }" value="${r"${pd."}${var[0] }${r"}"}" maxlength="32" placeholder="这里输入${var[2] }" title="${var[2] }" style="width:98%;"/></td>
+								<td><input type="number" name="${var[0] }" id="${var[0] }" value="${r"${pd."}${var[0] }${r"}"}" maxlength="32" placeholder="${var[2] }" title="${var[2] }" style="width:98%;"/></td>
 							</tr>
 						<#else>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">${var[2] }:</td>
-								<td><input type="text" name="${var[0] }" id="${var[0] }" value="${r"${pd."}${var[0] }${r"}"}" maxlength="${var[5] }" placeholder="这里输入${var[2] }" title="${var[2] }" style="width:98%;"/></td>
+								<td><input type="text" name="${var[0] }" id="${var[0] }" value="${r"${pd."}${var[0] }${r"}"}" maxlength="${var[5] }" placeholder="${var[2] }" title="${var[2] }" style="width:98%;"/></td>
 							</tr>
 						</#if>
 					</#if>

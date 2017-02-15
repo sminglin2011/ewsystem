@@ -31,7 +31,7 @@
 	</filter-mapping>
 	<context-param>
 		<param-name>webAppRootKey</param-name>
-		<param-value>www.fhadmin.org</param-value>
+		<param-value>www.sndauto.com</param-value>
 	</context-param>
 
 	<!-- 连接池 启用Web监控统计功能   start-->

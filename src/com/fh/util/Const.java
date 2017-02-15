@@ -7,6 +7,9 @@ import org.springframework.context.ApplicationContext;
  * 修改日期：2015/11/2
 */
 public class Const {
+	public static final String AR_PREFIX = "AR"; //INVOICE 预设前缀
+	public static final String AP_PREFIX = "AP"; //account payable invoice 预设前缀
+	
 	public static final String SESSION_SECURITY_CODE = "sessionSecCode";	//验证码
 	public static final String SESSION_USER = "sessionUser";				//session用的用户
 	public static final String SESSION_ROLE_RIGHTS = "sessionRoleRights";

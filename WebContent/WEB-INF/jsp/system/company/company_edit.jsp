@@ -89,6 +89,10 @@
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	
+	<script type="text/javascript" src="lib/app/company/app.js"></script>
+	<script type="text/javascript" src="lib/app/company/service.js"></script>
+	<script type="text/javascript" src="lib/app/company/controller.js"></script>
 		<script type="text/javascript">
 		$(top.hangge());
 		//保存
@@ -133,10 +137,7 @@
 			//日期框
 			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
 		});
-		angular.module("app",  []).controller("myCtrl", function($scope) {
-			$scope.moel = ${pd};
-			console.log($scope.model.COMPANY_ID);
-		})
+		
 		</script>
 </body>
 </html>

@@ -3,6 +3,7 @@ angular.module("app").controller('myCtrl', function($scope, serviceFactory) {
 			var vm = this;
 			vm.QX = {add:'', del:'', edit:'', cha:''};
 			vm.varList = [];
+			vm.model = {};
 			
 			vm.submit = submit;
 		    vm.edit = edit;
@@ -67,7 +68,26 @@ angular.module("app").controller('myCtrl', function($scope, serviceFactory) {
 		    }
 		// 
 		    function edit(id){
-		    	layer.msg('delete model, in development!', {icon: 5,time:2000});
+		    	console.log("eidt", id);
+		    	vm.model = id;
+		    	layer.open({
+		    		  type: 1,
+		    		  title: false,
+		    		  closeBtn: 1,
+		    		  area: '516px',
+		    		  skin: 'layui-layer-nobg', //没有背景色
+		    		  shadeClose: false,
+		    		  content: $('#editDiv')
+		    		});
+		    	/*
+		    	//iframe层-父子操作
+		    	layer.open({
+		    	  type: 2,
+		    	  area: ['700px', '530px'],
+		    	  fixed: false, //不固定
+		    	  maxmin: true,
+		    	  content: 'company/goEdit.do?COMPANY_ID='+id
+		    	});*/
 		    }
 		 
 		    function remove(id){

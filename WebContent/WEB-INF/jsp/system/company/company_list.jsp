@@ -9,7 +9,7 @@
 			+ path + "/";
 %>
 <!DOCTYPE html>
-<html lang="en" ng-app="app">
+<html lang="en" ng-app="app" ng-controller="myCtrl as ctrl">
 <head>
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
@@ -22,7 +22,7 @@
 <body class="no-skin">
 
 	<!-- /section:basics/navbar.layout -->
-	<div class="main-container" id="main-container" ng-controller="myCtrl as ctrl">
+	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
@@ -95,7 +95,7 @@
 											<td class="center">
 												<span ng-if="(ctrl.QX.edit != 1 && ctrl.QX.del !=1)" class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
 												<div class="hidden-sm hidden-xs btn-group">
-													<a ng-if="(ctrl.QX.edit == 1)" class="btn btn-xs btn-success" title="Edit" ng-click="ctrl.edit(var.COMPANY_ID)">
+													<a ng-if="(ctrl.QX.edit == 1)" class="btn btn-xs btn-success" title="Edit" ng-click="ctrl.edit(var)">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="Edit"></i>
 													</a>
 													<a ng-if="(ctrl.QX.del == 1)" class="btn btn-xs btn-danger" title="Delete">
@@ -110,7 +110,7 @@
 			
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
 															<li ng-if="(ctrl.QX.edit == 1)">
-																<a style="cursor:pointer;" class="tooltip-success" data-rel="tooltip" title="Edit" ng-click="ctrl.edit(var.COMPANY_ID)">
+																<a style="cursor:pointer;" class="tooltip-success" data-rel="tooltip" title="Edit" ng-click="ctrl.edit(var)">
 																	<span class="green">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
@@ -171,6 +171,53 @@
 	</div>
 	<!-- /.main-container -->
 
+<div id="editDiv" style="display: none;">
+			<div class="page-content">
+				<div class="row">
+					<div class="col-xs-12">
+					<form name="Form" id="Form" method="post">
+						<input type="hidden" name="COMPANY_ID" id="COMPANY_ID" ng-model="model.COMPANY_ID"/>
+						<div id="zhongxin" style="padding-top: 13px;">
+						<table id="table_report" class="table table-striped table-bordered table-hover">
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">Company Name:</td>
+								<td><input type="text" name="NAME" id="NAME" maxlength="255"  ng-model="ctrl.model.NAME"
+								<c:if test="${null != pd.COMPANY_ID}">readonly="readonly"</c:if>
+								placeholder="这里输入Company Name" title="Company Name" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">Company Code:</td>
+								<td><input type="text" name="COMPANY_CODE" id="COMPANY_CODE" ng-model="ctrl.model.COMPANY_CODE"
+								<c:if test="${null != pd.COMPANY_ID}">readonly="readonly"</c:if>
+								maxlength="10" placeholder="这里输入Company Code" title="Company Code" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">Company Address:</td>
+								<td><input type="text" name="COMPANY_ADDRESS" id="COMPANY_ADDRESS"
+								 ng-model="ctrl.model.COMPANY_ADDRESS"
+								maxlength="255" placeholder="这里输入Company Address" title="Company Address" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;"></td>
+								<td>
+									 <label style="float:left;padding-left: 8px;padding-top:7px;">
+								        <input name="ISMAIN" class="ace" id="ISMAIN" type="checkbox"  ng-model="ctrl.model.ISMAIN" ng-true-value="1" ng-false-value="0">	
+								        <span class="lbl">Main Company</span>
+								    </label>
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: center;" colspan="10">
+									<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
+									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+								</td>
+							</tr>
+						</table>
+						</div>
+						<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
+					</form>
+					</div>
+</div></div></div>
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="../../system/index/foot.jsp"%>

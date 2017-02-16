@@ -11,7 +11,7 @@
 	<sql id="Field">
 		AP_NUMBER,	
 		COST_TYPE,	
-		DISCRIPTION,	
+		DESCRIPTION,	
 		REMARKS,	
 		QUANTITY,	
 		UNIT_PRICE,	
@@ -26,7 +26,7 @@
 	<sql id="FieldValue">
 		#{AP_NUMBER},	
 		#{COST_TYPE},	
-		#{DISCRIPTION},	
+		#{DESCRIPTION},	
 		#{REMARKS},	
 		#{QUANTITY},	
 		#{UNIT_PRICE},	
@@ -63,7 +63,7 @@
 		set 
 			AP_NUMBER = #{AP_NUMBER},
 			COST_TYPE = #{COST_TYPE},
-			DISCRIPTION = #{DISCRIPTION},
+			DESCRIPTION = #{DESCRIPTION},
 			REMARKS = #{REMARKS},
 			QUANTITY = #{QUANTITY},
 			UNIT_PRICE = #{UNIT_PRICE},

@@ -7,7 +7,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app" ng-controller="myCtrl as vm">
 	<head>
 	<base href="<%=basePath%>">
 	<!-- 下拉框 -->
@@ -26,43 +26,83 @@
 			<div class="page-content">
 				<div class="row">
 					<div class="col-xs-12">
-					
 					<form action="accountpayable/${msg }.do" name="Form" id="Form" method="post">
-						<input type="hidden" name="ACCOUNTPAYABLE_ID" id="ACCOUNTPAYABLE_ID" value="${pd.ACCOUNTPAYABLE_ID}"/>
+						<input type="hidden" name="ACCOUNTPAYABLE_ID" id="ACCOUNTPAYABLE_ID" value="${pd.ACCOUNTPAYABLE_ID}" ng-model="vm.ACCOUNTPAYABLE_ID"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">AP Number:</td>
-								<td><input type="text" name="AP_NUNBER" id="AP_NUNBER" value="${pd.AP_NUNBER}" maxlength="20" placeholder="这里输入AP Number" title="AP Number" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Supplier Name:</td>
-								<td><input type="text" name="SUPPLIER_ID" id="SUPPLIER_ID" value="${pd.SUPPLIER_ID}" maxlength="20" placeholder="这里输入Supplier Name" title="Supplier Name" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Supplier Name:</td>
-								<td><input type="text" name="SUPPLIER_NAME" id="SUPPLIER_NAME" value="${pd.SUPPLIER_NAME}" maxlength="255" placeholder="这里输入Supplier Name" title="Supplier Name" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Date:</td>
-								<td><input class="span10 date-picker" name="DATE" id="DATE" value="${pd.DATE}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="Date" title="Date" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Terms:</td>
-								<td><input type="text" name="TERMS" id="TERMS" value="${pd.TERMS}" maxlength="10" placeholder="这里输入Terms" title="Terms" style="width:98%;"/></td>
-							</tr>
-							<tr>
+								<td><input type="text" name="AP_NUMBER" id="AP_NUMBER" value="${pd.AP_NUMBER}" maxlength="20" 
+								 	ng-model="vm.ap.AP_NUMBER"
+									placeholder="AP Number Auto General" title="AP Number" style="width:98%;" readonly="readonly"/></td>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Vender Invoice:</td>
-								<td><input type="text" name="VENDER_INVOICE" id="VENDER_INVOICE" value="${pd.VENDER_INVOICE}" maxlength="50" placeholder="这里输入Vender Invoice" title="Vender Invoice" style="width:98%;"/></td>
+								<td><input type="text" name="VENDER_INVOICE" id="VENDER_INVOICE" value="${pd.VENDER_INVOICE}" maxlength="50" 
+									ng-model="vm.VENDER_INVOICE"
+									placeholder="Vender Invoice" title="Vender Invoice" style="width:98%;"/>
+								</td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">Date:</td>
+								<td><input class="span10 date-picker" name="DATE" id="DATE" value="${pd.DATE}" type="text" 
+									ng-model="vm.DATE"
+									data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="Date" title="Date" style="width:98%;"/>
+								</td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">Supplier:</td>
+								<td>
+									<select class="chosen-select form-control"
+									        chosen 
+									        ng-model="vm.ap.SUPPLIER_ID"
+									        ng-options="s.id as s.title for s in vm.suppliers">
+									</select>
+									
+								</td>
+								<td colspan="2"></td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">Terms:</td>
+								<td><input type="text" name="TERMS" id="TERMS" value="${pd.TERMS}" maxlength="10" 
+								placeholder="Terms" title="Terms" style="width:98%;"/></td>
 							</tr>
 						</table>
 						</div>
-						<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
 					</form>
 					</div>
 					<!-- /.col -->
 				</div>
 				<!-- /.row -->
+				<div class="row"> <!-- DETAILS TABLE  -->
+					<div class="col-xs-12">
+					<div style="overflow-x: scroll; scrolling: auto;width: 100%;">
+						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+							<thead>
+								<tr>
+									<th class="center" style="width:50px;">CN</th>
+									<th class="center">Cost Type</th>
+									<th class="center">Description</th>
+									<th class="center">Remarks</th>
+									<th class="center">Quantity</th>
+									<th class="center">Unit Price</th>
+									<th class="center">GST Type</th>
+									<th class="center">GST Rate</th>
+									<th class="center">Discount</th>
+								</tr>
+							</thead>
+											
+							<tbody>
+								<tr ng-repeat="mx in vm.ap.mx track by mx.ACCOUNTPAYABLEMX_ID">
+									<td class='center' style="width: 30px;">{{$index+1}}</td>
+									<td class='center'>{{var.COST_TYPE}}</td>
+									<td class='center'>{{var.DESCRIPTION}}</td>
+									<td class='center'>{{var.REMARKS}}</td>
+									<td class='center'>{{var.QUANTITY}}</td>
+									<td class='center'>{{var.UNIT_PRICE}}</td>
+									<td class='center'>{{var.GST_TYPE}}</td>
+									<td class='center'>{{var.GST_RATE}}</td>
+									<td class='center'>{{var.DISCOUNT}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					</div>
+				</div> <!-- DETAILS TABLE row -->
 			</div>
 			<!-- /.page-content -->
 		</div>
@@ -92,20 +132,62 @@
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-		<script type="text/javascript">
+	
+    <script data-require="chosen@*" data-semver="1.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.0/chosen.jquery.min.js"></script>
+    <script data-require="chosen@*" data-semver="1.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.0/chosen.proto.min.js"></script>
+    
+    <script src="https://code.angularjs.org/1.4.9/angular.min.js"></script>
+    <script src="https://rawgit.com/leocaseiro/angular-chosen/master/dist/angular-chosen.min.js"></script>
+	<!-- SND SMING -->
+	<script src="lib/layer/2.1/layer.js"></script>
+	<script src="static/js/SND-utils.js"></script>
+	<script type="text/javascript" src="lib/app/app.js"></script>
+	<script type="text/javascript" src="lib/app/service.js"></script>
+	<script type="text/javascript">
+	'use strict';
+	angular.module("app").controller('myCtrl', function($scope, $http, serviceFactory) {
+		var vm = this;
+		vm.ap = {AP_NUMBER:'11'};
+		vm.ap.mx = [];
+		vm.suppliers = [
+			{id: '1', tite: '1'},
+		    {id: 'd', title: '2'},
+		    {id: 'e', title: '3'},
+		    {id: '4', title: '4'}
+		];
+		$scope.states = [
+		    {id: 'b', tite: 'Alaska'},
+		    {id: 'd', title: 'Arizona'},
+		    {id: 'e', title: 'Arkansas'},
+		    {id: '4', title: 'California'}
+		  ];
+		
+		
+		$http({
+		    method: 'get',
+		    url: 'supplier/listSvc/'
+		  }).then(function(posts) {
+		    console.log(posts.data.model.varList);
+		    console.log($scope.states);
+		    vm.suppliers = posts.data.model.varList;
+		  });
+		// fetch all Supplier
+		function fetchAllSuppliers() {
+			serviceFactory.fetchAllObjects('supplier/listSvc/')
+            .then(function(d) { vm.suppliers = d.model.varList; console.log(vm.suppliers, "list");
+         
+            },
+            function(errResponse){
+                console.error('Error while fetching Objects on controller');
+            });
+		}
+		
+		
+	})
 		$(top.hangge());
 		//保存
 		function save(){
-			if($("#AP_NUNBER").val()==""){
-				$("#AP_NUNBER").tips({
-					side:3,
-		            msg:'请输入AP Number',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#AP_NUNBER").focus();
-			return false;
-			}
+			
 			if($("#SUPPLIER_ID").val()==""){
 				$("#SUPPLIER_ID").tips({
 					side:3,
@@ -164,6 +246,32 @@
 		$(function() {
 			//日期框
 			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
+			
+			//下拉框
+			if(!ace.vars['touch']) {
+				$('.chosen-select').chosen({allow_single_deselect:true}); 
+				$(window)
+				.off('resize.chosen')
+				.on('resize.chosen', function() {
+					$('.chosen-select').each(function() {
+						 var $this = $(this);
+						 $this.next().css({'width': $this.parent().width()});
+					});
+				}).trigger('resize.chosen');
+				$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+					if(event_name != 'sidebar_collapsed') return;
+					$('.chosen-select').each(function() {
+						 var $this = $(this);
+						 $this.next().css({'width': $this.parent().width()});
+					});
+				});
+				$('#chosen-multiple-style .btn').on('click', function(e){
+					var target = $(this).find('input[type=radio]');
+					var which = parseInt(target.val());
+					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+					 else $('#form-field-select-4').removeClass('tag-input-style');
+				});
+			}
 		});
 		</script>
 </body>

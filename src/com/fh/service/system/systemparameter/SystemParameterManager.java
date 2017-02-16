@@ -1,16 +1,16 @@
-package com.fh.service.system.accountnumberctrl;
+package com.fh.service.system.systemparameter;
 
 import java.util.List;
 import com.fh.entity.Page;
 import com.fh.util.PageData;
 
 /** 
- * 说明： ACCOUNT NUMBER CONTROL接口
+ * 说明： System parameters接口
  * 创建人：SMing
- * 创建时间：2017-02-15
+ * 创建时间：2017-02-16
  * @version
  */
-public interface AccountNumberCtrlManager{
+public interface SystemParameterManager{
 
 	/**新增
 	 * @param pd

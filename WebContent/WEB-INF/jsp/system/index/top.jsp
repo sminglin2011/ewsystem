@@ -26,4 +26,3 @@
 		<script src="static/ace/js/respond.js"></script>
 		<![endif]-->
 		<script src="lib/angular/angular.js"></script>
-		<script src="static/js/SND-utils.js"></script>

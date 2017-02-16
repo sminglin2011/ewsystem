@@ -9,7 +9,7 @@
 			+ path + "/";
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app" ng-controller="myCtrl as vm">
 <head>
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
@@ -65,7 +65,7 @@
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">AP Number</th>
-									<th class="center">Supplier Name</th>
+									<th class="center">Supplier ID</th>
 									<th class="center">Supplier Name</th>
 									<th class="center">Date</th>
 									<th class="center">Terms</th>
@@ -82,7 +82,7 @@
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.AP_NUNBER}</td>
+											<td class='center'>${var.AP_NUMBER}</td>
 											<td class='center'>${var.SUPPLIER_ID}</td>
 											<td class='center'>${var.SUPPLIER_NAME}</td>
 											<td class='center'>${var.DATE}</td>
@@ -156,7 +156,7 @@
 							<tr>
 								<td style="vertical-align:top;">
 									<c:if test="${QX.add == 1 }">
-									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
+									<a class="btn btn-mini btn-success" ng-click="vm.add();">新增</a>
 									</c:if>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -196,7 +196,32 @@
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	
+	<!-- SND SMING -->
+	<script src="lib/layer/2.1/layer.js"></script>
+	<script src="static/js/SND-utils.js"></script>
+	<script type="text/javascript" src="lib/app/app.js"></script>
+	<script type="text/javascript" src="lib/app/service.js"></script>
 	<script type="text/javascript">
+	'use strict';
+	angular.module("app").controller('myCtrl', function($scope, serviceFactory) {
+		var vm = this;
+		vm.add = function() {
+			var index = layer.open({
+				  type: 2,
+				  title: "Edit Account Payable",
+				  content: 'accountpayable/goAdd.do',
+				  success: function(layero, index){
+				    var body = layer.getChildFrame('body', index);
+				    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+				    //console.log(body.html()) //得到iframe页的body内容
+				    //body.find('input').val('Hi，我是从父页来的')
+				  }
+				});
+			layer.full(index);
+		}
+	}); //------- angular end
+	
 		$(top.hangge());//关闭加载状态
 		//检索
 		function tosearch(){

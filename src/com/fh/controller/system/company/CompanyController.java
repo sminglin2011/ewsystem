@@ -8,38 +8,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.serializer.JSONSerializer;
-import com.alibaba.fastjson.serializer.JSONSerializerMap;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
+import com.fh.service.system.company.CompanyManager;
 import com.fh.util.AppUtil;
 import com.fh.util.JsonView;
+import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
-import com.fh.util.Jurisdiction;
-import com.fh.util.Tools;
-import com.fh.service.system.company.CompanyManager;
 
 /** 
  * 说明：System Company
@@ -236,7 +228,7 @@ public class CompanyController extends BaseController {
 	}
 	
 	
-	//-------------------Retrieve All Company--------------------------------------------------------
+	//-------------------Retrieve All Objects--------------------------------------------------------
 	@ResponseBody
 	@RequestMapping(value="/listSvc")
 	public Object listSvc(Page page, HttpServletResponse response) throws Exception{
@@ -257,57 +249,52 @@ public class CompanyController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return JsonView.Render(mv, response);
 	}
-	//-------------------Retrieve Single Company--------------------------------------------------------
-	@RequestMapping(value = "/listSvc/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getCompany(@PathVariable("id") long id) throws Exception {
-        System.out.println("Fetching Company with id " + id);
-        ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
-//        User user = userService.findById(id);
-//        if (user == null) {
-//            System.out.println("User with id " + id + " not found");
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-        return new ResponseEntity<Object>(companyService.findById(pd), HttpStatus.OK);
-    }
-	//-------------------Create a company--------------------------------------------------------
-	@RequestMapping(value = "/listSvc/", method = RequestMethod.POST)
-    public ResponseEntity<Void> createUser(@RequestBody Object company,    
-    		UriComponentsBuilder ucBuilder) {
-  
-//        if (userService.isUserExist(user)) {
-//            System.out.println("A User with name " + user.getUsername() + " already exist");
-//            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-//        }
-  
-//        userService.saveUser(user);
-  
-        HttpHeaders headers = new HttpHeaders(); 
-        headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(1).toUri());//user.getId()
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-    }
+//	//-------------------Retrieve Single Company--------------------------------------------------------
+//	@RequestMapping(value = "/listSvc/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Object> getCompany(@PathVariable("id") long id) throws Exception {
+//        System.out.println("Fetching Company with id " + id);
+//        ModelAndView mv = this.getModelAndView();
+//		PageData pd = new PageData();
+//		pd = this.getPageData();
+////        User user = userService.findById(id);
+////        if (user == null) {
+////            System.out.println("User with id " + id + " not found");
+////            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+////        }
+//        return new ResponseEntity<Object>(companyService.findById(pd), HttpStatus.OK);
+//    }
+//	//-------------------Create a company--------------------------------------------------------
+//	@RequestMapping(value = "/listSvc/savetest", method = RequestMethod.POST)
+//    public ResponseEntity<Void> createUser(@RequestBody Object company,    
+//    		UriComponentsBuilder ucBuilder) {
+//  
+////        if (userService.isUserExist(user)) {
+////            System.out.println("A User with name " + user.getUsername() + " already exist");
+////            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+////        }
+//  
+////        userService.saveUser(user);
+//  
+//        HttpHeaders headers = new HttpHeaders(); 
+//        headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(1).toUri());//user.getId()
+//        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+//    }
 	
-	//------------------- Update a User --------------------------------------------------------
-    
-    @RequestMapping(value = "/listSvc/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> updateUser(@PathVariable("id") long id, @RequestBody Object company) throws Exception {
-        System.out.println("Updating User " + id);
-        ModelAndView mv = this.getModelAndView();
+	//------------------- Save Object --------------------------------------------------------
+    @ResponseBody
+    @RequestMapping(value = "/listSvc/save", method = RequestMethod.POST)
+    public Object updateCompany(HttpServletResponse response) throws Exception { //ResponseEntity<Object>
+    	System.out.println("coming saving controller");
+    	ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-//        User currentUser = userService.findById(id);
-          
-//        if (currentUser==null) {
-//            System.out.println("User with id " + id + " not found");
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-  
-//        currentUser.setUsername(user.getUsername());
-//        currentUser.setAddress(user.getAddress());
-//        currentUser.setEmail(user.getEmail());
-//          
-//        userService.updateUser(currentUser);
-        return new ResponseEntity<Object>(companyService.findById(pd), HttpStatus.OK);
+		if (pd.get("COMPANY_ID") == null) { //insert
+			pd.put("COMPANY_ID", this.get32UUID());
+			companyService.save(pd);
+		} else { // update
+			companyService.edit(pd);
+		}
+//        return new ResponseEntity<Object>(HttpStatus.OK);
+		return JsonView.Render(mv, response);
     }
 }

@@ -58,9 +58,8 @@ public class AccountPayableController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		// 测试用
-		for(int i=0; i<10; i++) {
+		for(int i=0; i<2; i++) {
 			pd.put("ACCOUNTNUMBERCTRL_ID", this.get32UUID());
-			pd.put("AP_NUNBER", noCtrlSvc.getAPNextNumber(pd));
 			pd.put("ACCOUNTPAYABLE_ID", this.get32UUID());	//主键
 			accountpayableService.save(pd);
 		}

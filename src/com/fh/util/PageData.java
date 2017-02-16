@@ -43,6 +43,7 @@ public class PageData extends HashMap implements Map{
 				value = valueObj.toString(); 
 			}
 			returnMap.put(name, value); 
+			System.out.println("===========" + name + "===========" + value);
 		}
 		map = returnMap;
 	}

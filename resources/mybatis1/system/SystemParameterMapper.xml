@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AccountNumberCtrlMapper">
+<mapper namespace="SystemParameterMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		SYS_ACCOUNTNUMBERCTRL
+		SYS_SYSTEMPARAMETER
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		YEAR,	
-		CURRENT_NO,	
-		PREFIX,	
-		ACCOUNTNUMBERCTRL_ID
+		NAME_KEY,	
+		NAME_VALUE,	
+		SYSTEMPARAMETER_ID
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{YEAR},	
-		#{CURRENT_NO},	
-		#{PREFIX},	
-		#{ACCOUNTNUMBERCTRL_ID}
+		#{NAME_KEY},	
+		#{NAME_VALUE},	
+		#{SYSTEMPARAMETER_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -39,7 +37,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTNUMBERCTRL_ID = #{ACCOUNTNUMBERCTRL_ID}
+			SYSTEMPARAMETER_ID = #{SYSTEMPARAMETER_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -47,12 +45,11 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			YEAR = #{YEAR},
-			CURRENT_NO = #{CURRENT_NO},
-			PREFIX = #{PREFIX},
-		ACCOUNTNUMBERCTRL_ID = ACCOUNTNUMBERCTRL_ID
+			NAME_KEY = #{NAME_KEY},
+			NAME_VALUE = #{NAME_VALUE},
+		SYSTEMPARAMETER_ID = SYSTEMPARAMETER_ID
 		where 
-		ACCOUNTNUMBERCTRL_ID = #{ACCOUNTNUMBERCTRL_ID}
+		SYSTEMPARAMETER_ID = #{SYSTEMPARAMETER_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -62,7 +59,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTNUMBERCTRL_ID = #{ACCOUNTNUMBERCTRL_ID}
+			SYSTEMPARAMETER_ID = #{SYSTEMPARAMETER_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -97,7 +94,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTNUMBERCTRL_ID in
+			SYSTEMPARAMETER_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>

@@ -84,7 +84,7 @@
 											<td class='center'>
 												<label class="pos-rel"><input type='checkbox' name='ids' value="{{var.COMPANY_ID}}" class="ace" /><span class="lbl"></span></label>
 											</td>
-											<td class='center' style="width: 30px;">{{$.index+1}}</td>
+											<td class='center' style="width: 30px;">{{$index+1}}</td>
 											<td class='center'>{{var.NAME}}</td>
 											<td class='center'>{{var.COMPANY_CODE}}</td>
 											<td class='center'>{{var.COMPANY_ADDRESS}}</td>
@@ -98,7 +98,7 @@
 													<a ng-if="(ctrl.QX.edit == 1)" class="btn btn-xs btn-success" title="Edit" ng-click="ctrl.edit(var)">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="Edit"></i>
 													</a>
-													<a ng-if="(ctrl.QX.del == 1)" class="btn btn-xs btn-danger" title="Delete">
+													<a ng-if="(ctrl.QX.del == 1)" class="btn btn-xs btn-danger" title="Delete" ng-click="ctrl.deleteObj(var)">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="Delete"></i>
 													</a>
 												</div>
@@ -117,7 +117,7 @@
 																</a>
 															</li>
 															<li ng-if="(ctrl.QX.del == 1)">
-																<a style="cursor:pointer;" class="tooltip-error" data-rel="tooltip" title="Delete">
+																<a style="cursor:pointer;" class="tooltip-error" data-rel="tooltip" title="Delete" ng-click="ctrl.deleteObj(var)">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
@@ -144,7 +144,7 @@
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;">
-									<a ng-if="(ctrl.QX.add == 1)" class="btn btn-mini btn-success" onclick="add();">New</a>
+									<a ng-if="(ctrl.QX.add == 1)" class="btn btn-mini btn-success" ng-click="ctrl.add();">New</a>
 									<!-- <a ng-if="(ctrl.QX.del == 1)" class="btn btn-mini btn-danger" onclick="makeAll('Confirm Delete All Selected Data?');" title="Batch Delte" ><i class='ace-icon fa fa-trash-o bigger-120'></i>Batch Delete</a> -->
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -175,20 +175,19 @@
 			<div class="page-content">
 				<div class="row">
 					<div class="col-xs-12">
-					<form name="Form" id="Form" method="post">
 						<input type="hidden" name="COMPANY_ID" id="COMPANY_ID" ng-model="model.COMPANY_ID"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Company Name:</td>
-								<td><input type="text" name="NAME" id="NAME" maxlength="255"  ng-model="ctrl.model.NAME"
-								<c:if test="${null != pd.COMPANY_ID}">readonly="readonly"</c:if>
+								<td><input type="text" name="NAME" id="NAME" maxlength="255"  ng-model="ctrl.model.NAME" 
+								ng-readyonly="model.COMPANY_ID != NULL"
 								placeholder="这里输入Company Name" title="Company Name" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Company Code:</td>
 								<td><input type="text" name="COMPANY_CODE" id="COMPANY_CODE" ng-model="ctrl.model.COMPANY_CODE"
-								<c:if test="${null != pd.COMPANY_ID}">readonly="readonly"</c:if>
+								ng-readonly="ctrl.model.COMPANY_CODE != null"
 								maxlength="10" placeholder="这里输入Company Code" title="Company Code" style="width:98%;"/></td>
 							</tr>
 							<tr>
@@ -201,21 +200,14 @@
 								<td style="width:75px;text-align: right;padding-top: 13px;"></td>
 								<td>
 									 <label style="float:left;padding-left: 8px;padding-top:7px;">
-								        <input name="ISMAIN" class="ace" id="ISMAIN" type="checkbox"  ng-model="ctrl.model.ISMAIN" ng-true-value="1" ng-false-value="0">	
+								        <input name="ISMAIN" class="ace" id="ISMAIN" type="checkbox" ng-checked="ctrl.isMainCompany(ctrl.model.ISMAIN)"
+								        	ng-model="ctrl.model.ISMAIN" ng-true-value="1" ng-false-value="0">	
 								        <span class="lbl">Main Company</span>
 								    </label>
 								</td>
 							</tr>
-							<tr>
-								<td style="text-align: center;" colspan="10">
-									<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
-									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
-								</td>
-							</tr>
 						</table>
 						</div>
-						<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
-					</form>
 					</div>
 </div></div></div>
 	<!-- basic scripts -->
@@ -234,8 +226,9 @@
 	
 	<!-- SND SMING -->
 	<script src="lib/layer/2.1/layer.js"></script>
-	<script type="text/javascript" src="lib/app/company/app.js"></script>
-	<script type="text/javascript" src="lib/app/company/service.js"></script>
+	<script src="static/js/SND-utils.js"></script>
+	<script type="text/javascript" src="lib/app/app.js"></script>
+	<script type="text/javascript" src="lib/app/service.js"></script>
 	<script type="text/javascript" src="lib/app/company/controller.js"></script>
 	
 	<script type="text/javascript">
@@ -299,6 +292,78 @@
 			window.location.href='<%=basePath%>company/excel.do';
 		}
 		
+		'use strict';
+		angular.module("app").controller('myCtrl', function($scope, serviceFactory) {
+					var vm = this;
+					vm.QX = {add:'', del:'', edit:'', cha:''};
+					vm.varList = [];
+					vm.model = {};
+					
+					vm.submit = submit;
+				    vm.edit = edit;
+				    vm.add = add;
+				    vm.deleteObj = deleteObj;
+				    vm.isMainCompany = isMainCompany;
+				    
+				    fetchAllObjects();
+				 
+				    function fetchAllObjects(){
+				    	serviceFactory.fetchAllObjects('company/listSvc/')
+				            .then(
+				            function(d) {
+				            	console.log("what is it = ?" + d);
+				            	vm.varList = d.model.varList;
+				            	vm.QX = {add: d.model.QX.add, cha: d.model.QX.cha, del: d.model.QX.del, edit: d.model.QX.edit};
+				            	console.log("what is it$scope.QX = ?" + vm.QX.add, vm.QX.cha, vm.QX.del, vm.QX.edit);
+				            },
+				            function(errResponse){
+				                console.error('Error while fetching Objects on controller');
+				            }
+				        );
+				    }
+				    function submit() {
+				    	console.log("submit");
+				    	serviceFactory.postData("company/listSvc/save.do", $.param(vm.model)).then(function(d) {
+				    		fetchAllObjects();
+				    		layer.msg('success',{icon: 1});
+			    			setTimeout(function() { layer.closeAll(); }, 2000);
+				    	},
+			            function(errResponse){
+			                console.error('Error while fetching Objects on controller');
+			            });
+				    	
+				    }
+				    function deleteObj(obj) {
+				    	layer.confirm('Confirm Delete', {
+				    		  btn: ['Confirm'] //可以无限个按钮
+				    		}, function(index, layero){
+				    			serviceFactory.postData("company/delete.do", $.param(obj)).then(function(d) {
+						    		layer.msg(d, {icon: 1});
+						    		fetchAllObjects();
+						    	},
+					            function(errResponse){
+					                console.error('Error while fetching Objects on controller');
+					            });
+				    		});
+				    	console.log("delete obj");
+				    	
+				    	
+				    }
+					function add() {
+						vm.model = {ISMAIN: false}; //must rest model
+						layerOpen($('#editDiv'), submit);
+					}
+				    function edit(obj){
+				    	vm.model = angular.copy(obj);
+				    	layerOpen($('#editDiv'), submit);
+				    }
+				    function isMainCompany(isMain) {
+				    	 console.log("isMain", isMain);
+				    	 if (isMain == '1' || isMain == true || isMain == 'on') {
+				    		 return true;
+				    	 } else return false;
+				     }
+				});
 	</script>
 
 

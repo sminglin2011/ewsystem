@@ -9,7 +9,7 @@
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		AP_NUNBER,	
+		AP_NUMBER,	
 		SUPPLIER_ID,	
 		SUPPLIER_NAME,	
 		DATE,	
@@ -20,7 +20,7 @@
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{AP_NUNBER},	
+		#{AP_NUMBER},	
 		#{SUPPLIER_ID},	
 		#{SUPPLIER_NAME},	
 		#{DATE},	
@@ -53,7 +53,7 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			AP_NUNBER = #{AP_NUNBER},
+			AP_NUMBER = #{AP_NUMBER},
 			SUPPLIER_ID = #{SUPPLIER_ID},
 			SUPPLIER_NAME = #{SUPPLIER_NAME},
 			DATE = #{DATE},

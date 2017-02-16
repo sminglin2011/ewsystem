@@ -49,11 +49,10 @@
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Supplier:</td>
 								<td>
-									<select class="chosen-select form-control"
-									        chosen 
-									        ng-model="vm.ap.SUPPLIER_ID"
-									        ng-options="s.id as s.title for s in vm.suppliers">
-									</select>
+									<select class="select chosen-select form-control" data-placeholder="Select Supplier" style="vertical-align:top;width:98%;">
+										<option value="">Select Supplier</option>
+										<option value="{{s.SUPPLIER_ID}}" ng-repeat="s in vm.suppliers">{{s.NAME}}</option>
+								  	</select>
 									
 								</td>
 								<td colspan="2"></td>
@@ -78,25 +77,30 @@
 									<th class="center">Cost Type</th>
 									<th class="center">Description</th>
 									<th class="center">Remarks</th>
-									<th class="center">Quantity</th>
-									<th class="center">Unit Price</th>
-									<th class="center">GST Type</th>
-									<th class="center">GST Rate</th>
-									<th class="center">Discount</th>
+									<th class="center" style="width: 5%">Quantity</th>
+									<th class="center" style="width: 5%">Unit Price</th>
+									<th class="center" style="width: 5%">GST Type</th>
+									<th class="center" style="width: 5%">GST Rate</th>
+									<th class="center" style="width: 5%">Discount</th>
 								</tr>
 							</thead>
 											
 							<tbody>
-								<tr ng-repeat="mx in vm.ap.mx track by mx.ACCOUNTPAYABLEMX_ID">
+								<tr ng-repeat="var in vm.ap.mx track by var.ACCOUNTPAYABLEMX_ID">
 									<td class='center' style="width: 30px;">{{$index+1}}</td>
-									<td class='center'>{{var.COST_TYPE}}</td>
-									<td class='center'>{{var.DESCRIPTION}}</td>
-									<td class='center'>{{var.REMARKS}}</td>
-									<td class='center'>{{var.QUANTITY}}</td>
-									<td class='center'>{{var.UNIT_PRICE}}</td>
-									<td class='center'>{{var.GST_TYPE}}</td>
-									<td class='center'>{{var.GST_RATE}}</td>
-									<td class='center'>{{var.DISCOUNT}}</td>
+									<td class='center'>
+										<select class="select chosen-select form-control" data-placeholder="Select Supplier" style="vertical-align:top;width:98%;">
+										<option value="">Select Supplier</option>
+										<option value="{{s.SUPPLIER_ID}}" ng-repeat="s in vm.suppliers">{{s.NAME}}</option>
+								  	</select>
+									</td>
+									<td class='center'><input type="text" ng-model="var.DESCRIPTION"></td>
+									<td class='center'><input type="text" ng-model="var.REMARKS"></td>
+									<td class='center'><input type="text" ng-model="var.QUANTITY"></td>
+									<td class='center'><input type="text" ng-model="var.UNIT_PRICE"></td>
+									<td class='center'><input type="text" ng-model="var.GST_TYPE"></td>
+									<td class='center'><input type="text" ng-model="var.GST_RATE"></td>
+									<td class='center'><input type="text" ng-model="var.DISCOUNT"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -133,50 +137,30 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	
-    <script data-require="chosen@*" data-semver="1.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.0/chosen.jquery.min.js"></script>
-    <script data-require="chosen@*" data-semver="1.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.0/chosen.proto.min.js"></script>
-    
-    <script src="https://code.angularjs.org/1.4.9/angular.min.js"></script>
-    <script src="https://rawgit.com/leocaseiro/angular-chosen/master/dist/angular-chosen.min.js"></script>
 	<!-- SND SMING -->
 	<script src="lib/layer/2.1/layer.js"></script>
 	<script src="static/js/SND-utils.js"></script>
 	<script type="text/javascript" src="lib/app/app.js"></script>
 	<script type="text/javascript" src="lib/app/service.js"></script>
+	<script type="text/javascript" src="lib/select2-4.0.3/dist/js/select2.js"></script>
+	<link rel="stylesheet" type="text/css" href="lib/select2-4.0.3/dist/css/select2.css" />
 	<script type="text/javascript">
 	'use strict';
 	angular.module("app").controller('myCtrl', function($scope, $http, serviceFactory) {
 		var vm = this;
-		vm.ap = {AP_NUMBER:'11'};
+		vm.ap = {};
 		vm.ap.mx = [];
-		vm.suppliers = [
-			{id: '1', tite: '1'},
-		    {id: 'd', title: '2'},
-		    {id: 'e', title: '3'},
-		    {id: '4', title: '4'}
-		];
-		$scope.states = [
-		    {id: 'b', tite: 'Alaska'},
-		    {id: 'd', title: 'Arizona'},
-		    {id: 'e', title: 'Arkansas'},
-		    {id: '4', title: 'California'}
-		  ];
+		vm.apItem = {ACCOUNTPAYABLEMX_ID:'', COST_TYPE:'', DISCRIPTION:'', REMARKS:'', QUANTITY:'', UNIT_PRICE:'', GST_TYPE:'', GST_RATE:'',DISCOUNT:''};
+		vm.suppliers = [];
 		
-		
-		$http({
-		    method: 'get',
-		    url: 'supplier/listSvc/'
-		  }).then(function(posts) {
-		    console.log(posts.data.model.varList);
-		    console.log($scope.states);
-		    vm.suppliers = posts.data.model.varList;
-		  });
-		// fetch all Supplier
+		for(var i=0; i<8; i++) {
+			vm.ap.mx.push({ACCOUNTPAYABLEMX_ID:i, COST_TYPE:'', DISCRIPTION:'', REMARKS:'', QUANTITY:'', UNIT_PRICE:'', GST_TYPE:'', GST_RATE:'',DISCOUNT:''});
+		}
+		fetchAllSuppliers();
+		//fetch all Supplier
 		function fetchAllSuppliers() {
 			serviceFactory.fetchAllObjects('supplier/listSvc/')
-            .then(function(d) { vm.suppliers = d.model.varList; console.log(vm.suppliers, "list");
-         
-            },
+            .then(function(d) { vm.suppliers = d.model.varList;},
             function(errResponse){
                 console.error('Error while fetching Objects on controller');
             });
@@ -248,30 +232,7 @@
 			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
 			
 			//下拉框
-			if(!ace.vars['touch']) {
-				$('.chosen-select').chosen({allow_single_deselect:true}); 
-				$(window)
-				.off('resize.chosen')
-				.on('resize.chosen', function() {
-					$('.chosen-select').each(function() {
-						 var $this = $(this);
-						 $this.next().css({'width': $this.parent().width()});
-					});
-				}).trigger('resize.chosen');
-				$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
-					if(event_name != 'sidebar_collapsed') return;
-					$('.chosen-select').each(function() {
-						 var $this = $(this);
-						 $this.next().css({'width': $this.parent().width()});
-					});
-				});
-				$('#chosen-multiple-style .btn').on('click', function(e){
-					var target = $(this).find('input[type=radio]');
-					var which = parseInt(target.val());
-					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
-					 else $('#form-field-select-4').removeClass('tag-input-style');
-				});
-			}
+			$(".select").select2();
 		});
 		</script>
 </body>

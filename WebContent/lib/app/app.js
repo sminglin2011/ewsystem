@@ -1,3 +1,3 @@
 'use strict';
-		 var app = angular.module("app",['localytics.directives']);
+		 var app = angular.module("app",[]);//'localytics.directives'
 		 

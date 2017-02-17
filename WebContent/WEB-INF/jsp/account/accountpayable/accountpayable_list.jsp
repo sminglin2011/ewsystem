@@ -200,6 +200,7 @@
 	<!-- SND SMING -->
 	<script src="lib/layer/2.1/layer.js"></script>
 	<script src="static/js/SND-utils.js"></script>
+	<script type="text/javascript" src="lib/app/angular-select2.js"></script>
 	<script type="text/javascript" src="lib/app/app.js"></script>
 	<script type="text/javascript" src="lib/app/service.js"></script>
 	<script type="text/javascript">

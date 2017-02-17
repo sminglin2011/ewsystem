@@ -80,7 +80,7 @@
 				<div class="row"> <!-- DETAILS TABLE  -->
 					<div class="col-xs-12">
 					<div style="overflow-x: scroll; scrolling: auto;width: 100%;">
-						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+						<table id="simple-table" class="table table-striped table-bordered table-hover" >	
 							<thead>
 								<tr>
 									<th width="5%">CN</th>
@@ -99,19 +99,19 @@
 								<tr ng-repeat="var in vm.ap.mx track by var.ACCOUNTPAYABLEMX_ID">
 									<td class='center'>{{$index+1}}</td>
 									<td class=''>
-										<select class="select chosen-select form-control" ng-model="var.COST_TYPE" ng-changed="vm.changeCOD(var)"
+										<select class="select chosen-select form-control" ng-model="var.COST_TYPE" ng-change="vm.changeCOA(var)" 
 											data-placeholder="Select Chart of account" style="width:100%;">
 										<option value=""></option>
 										<option value="{{coa.LEDGER_CODE}}" ng-repeat="coa in vm.coas">{{coa.DESCRIPTION}}</option>
 								  	</select>
 									</td>
-									<td class=''><input class="form-control" type="text" ng-model="var.DESCRIPTION"></td>
-									<td class=''><input class="form-control" type="text" ng-model="var.REMARKS"></td>
-									<td class=''><input class="form-control" type="text" ng-model="var.QUANTITY" style="width:100%"></td>
-									<td class=''><input class="form-control" type="text" ng-model="var.UNIT_PRICE" style="width:100%"></td>
-									<td class=''><input class="form-control" type="text" ng-model="var.GST_TYPE" style="width:100%"></td>
-									<td class=''><input class="form-control" type="text" ng-model="var.GST_RATE" style="width:100%"></td>
-									<td class=''><input class="form-control" type="text" ng-model="var.DISCOUNT" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.DESCRIPTION"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.REMARKS"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.QUANTITY" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.UNIT_PRICE" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.GST_TYPE" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.GST_RATE" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.DISCOUNT" style="width:100%"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -182,11 +182,21 @@
             });
 		}
 		
-		vm.changeCOD = function(mx) {
-			
+		vm.changeCOA = function(mx) {
+			angular.forEach(vm.coas, function(obj, i) {
+				if (obj.LEDGER_CODE == mx.COST_TYPE) {
+					mx.GST_TYPE = obj.GST_TYPE;
+					mx.GST_RATE = obj.GST_RATE;
+					mx.DESCRIPTION = obj.DESCRIPTION;
+					mx.QUANTITY = 1;
+					mx.UNIT_PRICE = 0;
+					mx.DISCOUNT = 0;
+					return false;
+				}
+			})
 		}
 		
-	})
+	}) // end angular
 		$(top.hangge());
 		//保存
 		function save(){

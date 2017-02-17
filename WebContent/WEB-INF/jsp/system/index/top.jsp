@@ -25,4 +25,5 @@
 		<script src="static/ace/js/html5shiv.js"></script>
 		<script src="static/ace/js/respond.js"></script>
 		<![endif]-->
+		<script src="static/js/jquery-1.7.2.js"></script>
 		<script src="lib/angular/angular.js"></script>

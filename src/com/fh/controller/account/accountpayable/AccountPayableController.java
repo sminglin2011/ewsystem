@@ -15,6 +15,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
 import com.fh.entity.account.AccountPayable;
+import com.fh.entity.account.AccountPayableMx;
 import com.fh.util.AppUtil;
 import com.fh.util.JsonView;
 import com.fh.util.ObjectExcelView;
@@ -82,7 +84,7 @@ public class AccountPayableController extends BaseController {
 	 */
 	@RequestMapping(value="/delete")
 	@ResponseBody
-	public Object delete() throws Exception{
+	public Object delete(HttpServletResponse response, String accountpayable_ID) throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"删除AccountPayable");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null ;} //校验权限
 		Map<String,String> map = new HashMap<String,String>();
@@ -92,10 +94,14 @@ public class AccountPayableController extends BaseController {
 		if(Integer.parseInt(accountpayablemxService.findCount(pd).get("zs").toString()) > 0){
 			errInfo = "false";
 		}else{
+			pd.put("accountpayable_ID", accountpayable_ID);
+			System.out.println(pd.get("accountpayable_ID")+" ====== accountpayable_ID in pd");
+			
 			accountpayableService.delete(pd);
 		}
 		map.put("result", errInfo);
-		return AppUtil.returnObject(new PageData(), map);
+//		return AppUtil.returnObject(new PageData(), map);
+		return JsonView.Render(map, response);
 	}
 	
 	/**修改
@@ -214,17 +220,73 @@ public class AccountPayableController extends BaseController {
 //		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
 //	}
 	
+	//-------------------Retrieve All Objects--------------------------------------------------------
+	@ResponseBody
+	@RequestMapping(value="/listSvc")
+	public Object listSvc(Page page, HttpServletResponse response) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表 Account payable");
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = accountpayableService.listAll(pd);	//列出COA列表
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return JsonView.Render(mv, response);
+	}
+	//-------------------Retrieve One Objects--------------------------------------------------------
+		@ResponseBody
+		@RequestMapping(value="/listSvc/{accountpayable_ID}")
+		public Object getObjectById(Page page, HttpServletResponse response, @PathVariable("accountpayable_ID") String object_ID) throws Exception{
+			logBefore(logger, Jurisdiction.getUsername()+"获取 Account payable 单个对象");
+			//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+			ModelAndView mv = this.getModelAndView();
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			String keywords = pd.getString("keywords");				//关键词检索条件
+			if(null != keywords && !"".equals(keywords)){
+				pd.put("keywords", keywords.trim());
+			}
+			page.setPd(pd);
+			pd.put("accountpayable_ID", object_ID);
+			System.out.println(object_ID + " = pd.accountpayable_ID=" + pd.getString("accountpayable_ID"));
+			pd = accountpayableService.findById(pd);	//返回 Object 
+			mv.addObject("pd", pd);
+			mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+			return JsonView.Render(mv, response);
+		}
 	//------------------- Save Object --------------------------------------------------------
     @ResponseBody
     @RequestMapping(value = "/saveAp", method = RequestMethod.POST)
-    public Object updateCompany(HttpServletResponse response, @RequestBody AccountPayable ap) throws Exception { //ResponseEntity<Object>
+    public Object saveAccountPayable(HttpServletResponse response, @RequestBody AccountPayable ap) throws Exception { //ResponseEntity<Object>
     	System.out.println("coming saving controller");
     	ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		System.out.println("ap =========== " + ap);
+		List<AccountPayableMx> list = ap.getMx();
+		List<AccountPayableMx> results = new ArrayList<>();
 		ap.setAccountpayable_ID(get32UUID());
 		accountpayableService.saveAP(ap);
+		for(AccountPayableMx mx : list) {
+			if(mx.getCost_type() != null && !mx.getCost_type().equals("")) {
+				mx.setAccountpayable_ID(ap.getAccountpayable_ID());
+				mx.setAccountpayablemx_ID(get32UUID());
+				results.add(mx);
+			}
+		}
+		for (AccountPayableMx mx: results) {
+			System.out.println("mx.cost_type=" + mx.getCost_type());
+			
+			accountpayablemxService.saveAPMX(mx);
+		}
 		return JsonView.Render(mv, response);
     }
+    
 }

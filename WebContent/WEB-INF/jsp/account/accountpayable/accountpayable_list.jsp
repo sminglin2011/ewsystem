@@ -63,46 +63,34 @@
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
-									<th class="center" style="width:50px;">序号</th>
+									<th class="center" style="width:50px;">SN</th>
 									<th class="center">AP Number</th>
-									<th class="center">Supplier ID</th>
 									<th class="center">Supplier Name</th>
 									<th class="center">Date</th>
 									<th class="center">Terms</th>
 									<th class="center">Vender Invoice</th>
-									<th class="center">操作</th>
+									<th class="center">Action</th>
 								</tr>
 							</thead>
 													
 							<tbody>
 							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
-									<c:if test="${QX.cha == 1 }">
-									<c:forEach items="${varList}" var="var" varStatus="vs">
-										<tr>
-											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.AP_NUMBER}</td>
-											<td class='center'>${var.SUPPLIER_ID}</td>
-											<td class='center'>${var.SUPPLIER_NAME}</td>
-											<td class='center'>${var.DATE}</td>
-											<td class='center'>${var.TERMS}</td>
-											<td class='center'>${var.VENDER_INVOICE}</td>
+										<tr ng-repeat="var in vm.varList">
+											<td class='center' style="width: 30px;">{{$index+1}}</td>
+											<td class='center'>{{var.ap_number}}</td>
+											<td class='center'>{{var.supplier_name}}</td>
+											<td class='center'>{{var.date}}</td>
+											<td class='center'>{{var.terms}}</td>
+											<td class='center'>{{var.vender_invoice}}</td>
 											<td class="center">
-												<c:if test="${QX.edit != 1 && QX.del != 1 }">
-												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
-												</c:if>
+												<span ng-if="(vm.QX.edit != 1 && vm.QX.del != 1)" class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
 												<div class="hidden-sm hidden-xs btn-group">
-													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.ACCOUNTPAYABLE_ID}');">
+													<a ng-if="(vm.QX.edit == 1)" class="btn btn-xs btn-success" title="编辑" ng-click="vm.edit(var);">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.ACCOUNTPAYABLE_ID}');">
+													<a ng-if="(vm.QX.del == 1)" class="btn btn-xs btn-danger" ng-click="vm.del(var);">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
-													</c:if>
 												</div>
 												<div class="hidden-md hidden-lg">
 													<div class="inline pos-rel">
@@ -111,53 +99,38 @@
 														</button>
 			
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-															<c:if test="${QX.edit == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.ACCOUNTPAYABLE_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
+															<li ng-if="(vm.QX.edit == 1)">
+																<a style="cursor:pointer;" ng-click="vm.edit(var);" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
 																</a>
 															</li>
-															</c:if>
-															<c:if test="${QX.del == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="del('${var.ACCOUNTPAYABLE_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
+															<li ng-if="(vm.QX.del == 1)">
+																<a style="cursor:pointer;" ng-click="vm.del(var);" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
 																</a>
 															</li>
-															</c:if>
 														</ul>
 													</div>
 												</div>
 											</td>
 										</tr>
-									
-									</c:forEach>
-									</c:if>
-									<c:if test="${QX.cha == 0 }">
-										<tr>
+										<tr ng-if="(vm.QX.cha == 0)">
 											<td colspan="100" class="center">您无权查看</td>
 										</tr>
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
+									<tr class="main_info" ng-if="(vm.varList.length < 1)">
 										<td colspan="100" class="center" >没有相关数据</td>
 									</tr>
-								</c:otherwise>
-							</c:choose>
 							</tbody>
 						</table>
 						<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;">
-									<c:if test="${QX.add == 1 }">
-									<a class="btn btn-mini btn-success" ng-click="vm.add();">新增</a>
-									</c:if>
+									<a ng-if="(vm.QX.add == 1)" class="btn btn-mini btn-success" ng-click="vm.add();">新增</a>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
@@ -207,6 +180,7 @@
 	'use strict';
 	angular.module("app").controller('myCtrl', function($scope, serviceFactory) {
 		var vm = this;
+		vm.QX = {add:'', del:'', edit:'', cha:''};
 		vm.add = function() {
 			var index = layer.open({
 				  type: 2,
@@ -220,6 +194,46 @@
 				  }
 				});
 			layer.full(index);
+		};
+		vm.edit = function(obj) {
+			var index = layer.open({
+				  type: 2,
+				  title: "Edit Account Payable",
+				  content: 'accountpayable/goEdit.do?accountpayable_ID='+obj.accountpayable_ID,
+				  success: function(layero, index){
+				    var body = layer.getChildFrame('body', index);
+				    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+				    //console.log(body.html()) //得到iframe页的body内容
+				    //body.find('input').val('Hi，我是从父页来的')
+				  }
+				});
+			layer.full(index);
+		};
+		vm.del = del;
+		function del(obj) {
+			layer.confirm('Confirm Delete', {
+	    		  btn: ['Confirm'] //可以无限个按钮
+	    		}, function(index, layero){
+	    			serviceFactory.postData("accountpayable/delete.do", $.param({accountpayable_ID:obj.accountpayable_ID})).then(function(d) {
+	    				layer.msg("cusss", {icon: 1});
+			    		fetchAllObjects();
+			    	},
+		            function(errResponse){
+		                console.error('Error while fetching Objects on controller');
+		            });
+	    		});
+	    	console.log("delete obj");
+		};
+		
+		vm.varList = [];
+		fetchAllObjects();
+		//fetch all chart of accounts
+		function fetchAllObjects() {
+			serviceFactory.fetchAllObjects('accountpayable/listSvc/')
+            .then(function(d) { vm.varList = d.model.varList; vm.QX = {add: d.model.QX.add, cha: d.model.QX.cha, del: d.model.QX.del, edit: d.model.QX.edit};},
+            function(errResponse){
+                console.error('Error while fetching Objects on controller');
+            });
 		}
 	}); //------- angular end
 	

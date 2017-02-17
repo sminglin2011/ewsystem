@@ -346,8 +346,6 @@
 					            });
 				    		});
 				    	console.log("delete obj");
-				    	
-				    	
 				    }
 					function add() {
 						vm.model = {ISMAIN: false}; //must rest model

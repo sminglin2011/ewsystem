@@ -2,6 +2,7 @@ package com.fh.service.account.accountpayablemx;
 
 import java.util.List;
 import com.fh.entity.Page;
+import com.fh.entity.account.AccountPayableMx;
 import com.fh.util.PageData;
 
 /** 
@@ -17,6 +18,12 @@ public interface AccountPayableMxManager{
 	 * @throws Exception
 	 */
 	public void save(PageData pd)throws Exception;
+	
+	/**新增
+	 * @param mx
+	 * @throws Exception
+	 */
+	public void saveAPMX(AccountPayableMx mx)throws Exception;
 	
 	/**删除
 	 * @param pd
@@ -59,6 +66,13 @@ public interface AccountPayableMxManager{
 	 * @throws Exception
 	 */
 	public PageData findCount(PageData pd)throws Exception;
+	
+	/**
+	 * 批量添加
+	 * @param list
+	 * @throws Exception
+	 */
+	public void batchInsert(List<AccountPayableMx> list) throws Exception;
 	
 }
 

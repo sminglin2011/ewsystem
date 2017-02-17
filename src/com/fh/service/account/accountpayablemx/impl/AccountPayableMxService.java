@@ -5,7 +5,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.Page;
+import com.fh.entity.account.AccountPayableMx;
 import com.fh.util.PageData;
+import com.google.gson.internal.Excluder;
 import com.fh.service.account.accountpayablemx.AccountPayableMxManager;
 
 /** 
@@ -26,6 +28,14 @@ public class AccountPayableMxService implements AccountPayableMxManager{
 	 */
 	public void save(PageData pd)throws Exception{
 		dao.save("AccountPayableMxMapper.save", pd);
+	}
+	
+	/**新增
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void saveAPMX(AccountPayableMx mx)throws Exception{
+		dao.save("AccountPayableMxMapper.saveAPMX", mx);
 	}
 	
 	/**删除
@@ -85,6 +95,9 @@ public class AccountPayableMxService implements AccountPayableMxManager{
 	public PageData findCount(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("AccountPayableMxMapper.findCount", pd);
 	}
-	
+
+	public void batchInsert(List<AccountPayableMx> list) throws Exception {
+		dao.batchSave("AccountPayableMxMapper.batchInsert", list);
+	}
 }
 

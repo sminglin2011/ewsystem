@@ -19,7 +19,7 @@
 		discount,	
 		ledger_code,	
 		accountpayablemx_ID,
-		ACCOUNTPAYABLE_ID
+		accountpayable_ID
 	</sql>
 	
 	<!-- 字段值 -->
@@ -34,7 +34,7 @@
 		#{discount},	
 		#{ledger_code},	
 		#{accountpayablemx_ID},
-		#{ACCOUNTPAYABLE_ID}
+		#{accountpayable_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -83,7 +83,7 @@
 		from 
 		<include refid="tableName"></include>
 		where
-		ACCOUNTPAYABLE_ID = #{pd.ACCOUNTPAYABLE_ID}
+		accountpayable_ID = #{pd.accountpayable_ID}
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
@@ -122,7 +122,19 @@
 		from 
 			<include refid="tableName"></include>
 		where
-			ACCOUNTPAYABLE_ID = #{ACCOUNTPAYABLE_ID}
+			accountpayable_ID = #{accountpayable_ID}
 	</select>
 	<!-- fh313596790qq(青苔) -->
+
+	<!-- 新增-->
+	<!-- 新增-->
+	<insert id="saveAPMX" parameterType="apMx">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
 </mapper>

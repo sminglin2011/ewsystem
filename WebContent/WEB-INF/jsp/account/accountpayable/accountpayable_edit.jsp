@@ -96,22 +96,22 @@
 							</thead>
 											
 							<tbody>
-								<tr ng-repeat="var in vm.ap.mx track by var.ACCOUNTPAYABLEMX_ID">
+								<tr ng-repeat="var in vm.ap.mx track by var.accountpayablemx_ID">
 									<td class='center'>{{$index+1}}</td>
 									<td class=''>
-										<select class="select chosen-select form-control" ng-model="var.COST_TYPE" ng-change="vm.changeCOA(var)" 
+										<select class="select chosen-select form-control" ng-model="var.cost_type" ng-change="vm.changeCOA(var)" 
 											data-placeholder="Select Chart of account" style="width:100%;">
 										<option value=""></option>
 										<option value="{{coa.LEDGER_CODE}}" ng-repeat="coa in vm.coas">{{coa.DESCRIPTION}}</option>
 								  	</select>
 									</td>
-									<td class=''><input class="center form-control" type="text" ng-model="var.DESCRIPTION"></td>
-									<td class=''><input class="center form-control" type="text" ng-model="var.REMARKS"></td>
-									<td class=''><input class="center form-control" type="text" ng-model="var.QUANTITY" style="width:100%"></td>
-									<td class=''><input class="center form-control" type="text" ng-model="var.UNIT_PRICE" style="width:100%"></td>
-									<td class=''><input class="center form-control" type="text" ng-model="var.GST_TYPE" style="width:100%"></td>
-									<td class=''><input class="center form-control" type="text" ng-model="var.GST_RATE" style="width:100%"></td>
-									<td class=''><input class="center form-control" type="text" ng-model="var.DISCOUNT" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.description"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.remarks"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.quantity" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.unit_price" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.gst_type" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.gst_rate" style="width:100%"></td>
+									<td class=''><input class="center form-control" type="text" ng-model="var.discount" style="width:100%"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -152,15 +152,24 @@
 	<script type="text/javascript">
 	'use strict';
 	angular.module("app").controller('myCtrl', function($scope, $http, serviceFactory) {
+		var accountpayable_ID = getParamFromUrl("accountpayable_ID");
 		var vm = this;
-		vm.ap = {date:'2017-02-17', terms:'COD', supplier_name: 'aa'};
+		console.log(accountpayable_ID, 'accountpayable_ID');
+		vm.ap = {};
+		if (accountpayable_ID != null) {
+			serviceFactory.fetchAllObjects('accountpayable/listSvc/'+accountpayable_ID+'/')
+            .then(function(d) { console.log('ap=pd=', d.model); vm.ap = d.model.pd;},
+            function(errResponse){
+                console.error('Error while fetching Objects on controller');
+            });
+		}
 		vm.ap.creditor = 20000;
 		vm.ap.mx = [];
 		vm.suppliers = [];
 		vm.coas = [];
 		
 		for(var i=0; i<8; i++) {
-			vm.ap.mx.push({ACCOUNTPAYABLEMX_ID:i, COST_TYPE:'', DISCRIPTION:'', REMARKS:'', QUANTITY:'', UNIT_PRICE:'', GST_TYPE:'', GST_RATE:'',DISCOUNT:''});
+			vm.ap.mx.push({accountpayablemx_ID:i, cost_type:'', description:'', remarks:'', quantity:'', unit_price:'', gst_type:'', gst_rate:'',discount:''});
 		}
 		fetchAllSuppliers();
 		//fetch all Supplier
@@ -184,22 +193,24 @@
 		
 		vm.changeCOA = function(mx) {
 			angular.forEach(vm.coas, function(obj, i) {
-				if (obj.LEDGER_CODE == mx.COST_TYPE) {
-					mx.GST_TYPE = obj.GST_TYPE;
-					mx.GST_RATE = obj.GST_RATE;
-					mx.DESCRIPTION = obj.DESCRIPTION;
-					mx.QUANTITY = 1;
-					mx.UNIT_PRICE = 0;
-					mx.DISCOUNT = 0;
+				if (obj.LEDGER_CODE == mx.cost_type) {
+					mx.gst_type = obj.GST_TYPE;
+					mx.gst_rate = obj.GST_RATE;
+					mx.description = obj.DESCRIPTION;
+					mx.quantity = 1;
+					mx.unit_price = 0;
+					mx.discount = 0;
 					return false;
 				}
 			});
-		}
+			console.log('mx=', mx);
+		};
 		vm.close = function(){
 			console.log("close");
 			var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+			parent.reloadUrl();
 			parent.layer.close(index); //再执行关闭 
-		}
+		};
 		vm.save = function(){
 			console.log("1vm.ap",JSON.stringify(vm.ap));
 			$http({
@@ -207,12 +218,15 @@
 	            method: "POST",
 	            data: JSON.stringify(vm.ap)
 	          }
-	        ).then(function(d) { console.log("success")},
-            function(errResponse){
+	        ).then(function(d) { 
+	        	console.log("success");
+	        	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+				parent.layer.close(index); //再执行关闭
+			},function(errResponse){
                 console.error('Error while fetching Objects on controller');
-            });;
-		}
-	}) // end angular
+            });
+		};
+	}); // end angular
 		$(top.hangge());
 		//保存
 		function save(){

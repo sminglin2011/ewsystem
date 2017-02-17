@@ -1,6 +1,7 @@
 package com.fh.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,6 +10,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.fh.entity.account.AccountPayableMx;
 /**
  * @author FH Q313596790
  * 修改时间：2015、12、11
@@ -38,8 +41,41 @@ public class DaoSupport implements DAO {
 	 * @throws Exception
 	 */
 	public Object batchSave(String str, List objs )throws Exception{
+		
 		return sqlSessionTemplate.insert(str, objs);
+		
 	}
+	public void insertBatch(Map<String,Object> paramMap, List<AccountPayableMx> list) throws Exception {
+        // 新获取一个模式为BATCH，自动提交为false的session
+        // 如果自动提交设置为true,将无法控制提交的条数，改为最后统一提交，可能导致内存溢出
+        SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            if(null != list || list.size()>0){
+                int  lsize=list.size();
+                for (int i = 0, n=list.size(); i < n; i++) {
+                    AccountPayableMx mx= list.get(i);
+//                    mx.setAccountpayable_ID(accountpayable_ID);
+//                    user.setIndate((String)paramMap.get("indate"));
+//                    user.setDatadate((String)paramMap.get("dataDate"));//数据归属时间
+                session.insert("AccountPayableMxMapper.save",mx);
+  //session.update("com.xx.mapper.UserMapper.updateByPrimaryKeySelective",_entity);
+//                                        session.insert(“包名+类名", user);
+                    if ((i>0 && i % 1000 == 0) || i == lsize - 1) {
+                        // 手动每1000个一提交，提交后无法回滚
+                        session.commit();
+                        // 清理缓存，防止溢出
+                        session.clearCache();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // 没有提交的数据可以回滚
+            session.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 	
 	/**
 	 * 修改对象

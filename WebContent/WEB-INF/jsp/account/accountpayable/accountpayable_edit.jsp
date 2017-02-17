@@ -202,19 +202,15 @@
 		}
 		vm.save = function(){
 			console.log("1vm.ap",JSON.stringify(vm.ap));
-			
-			//serviceFactory.postDataJson('http://localhost:8090/ewsystem/accountpayable/listStr/save', vm.ap).then(function(d){console.log("success");}, function(){console.log("error")});
 			$http({
 	            url: 'accountpayable/saveAp',
 	            method: "POST",
 	            data: JSON.stringify(vm.ap)
 	          }
-	        ).success(function(data){
-            	console.log('success');
-            }).error(function(data){
-            	console.log("error", data);
-            	//layer.msg('system run ajax error,'+data, { icon : 5, time : 5000 });
-            });
+	        ).then(function(d) { console.log("success")},
+            function(errResponse){
+                console.error('Error while fetching Objects on controller');
+            });;
 		}
 	}) // end angular
 		$(top.hangge());

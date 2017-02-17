@@ -16,7 +16,17 @@
 	<%@ include file="../../system/index/top.jsp"%>
 	<!-- 日期框 -->
 	<link rel="stylesheet" href="static/ace/css/datepicker.css" />
+	<style type="text/css">
+	#simple-table tbody tr td {
+		padding: 0;
+	}
+	#simple-table tbody tr td input
+	{
+		border: 0
+	}
+	</style>
 </head>
+
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
 <div class="main-container" id="main-container">
@@ -73,34 +83,35 @@
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
-									<th class="center" style="width:50px;">CN</th>
-									<th class="center">Cost Type</th>
-									<th class="center">Description</th>
-									<th class="center">Remarks</th>
-									<th class="center" style="width: 5%">Quantity</th>
-									<th class="center" style="width: 5%">Unit Price</th>
-									<th class="center" style="width: 5%">GST Type</th>
-									<th class="center" style="width: 5%">GST Rate</th>
-									<th class="center" style="width: 5%">Discount</th>
+									<th width="5%">CN</th>
+									<th width="10%">Cost Type</th>
+									<th width="30%">Description</th>
+									<th width="20%">Remarks</th>
+									<th width="5%">Quantity</th>
+									<th width="5%">Unit Price</th>
+									<th width="5%">GST Type</th>
+									<th width="5%">GST Rate</th>
+									<th width="5%">Discount</th>
 								</tr>
 							</thead>
 											
 							<tbody>
 								<tr ng-repeat="var in vm.ap.mx track by var.ACCOUNTPAYABLEMX_ID">
-									<td class='center' style="width: 30px;">{{$index+1}}</td>
-									<td class='center'>
-										<select class="select chosen-select form-control" data-placeholder="Select Supplier" style="vertical-align:top;width:98%;">
-										<option value="">Select Supplier</option>
-										<option value="{{s.SUPPLIER_ID}}" ng-repeat="s in vm.suppliers">{{s.NAME}}</option>
+									<td class='center'>{{$index+1}}</td>
+									<td class=''>
+										<select class="select chosen-select form-control" ng-model="var.COST_TYPE" ng-changed="vm.changeCOD(var)"
+											data-placeholder="Select Chart of account" style="width:100%;">
+										<option value=""></option>
+										<option value="{{coa.LEDGER_CODE}}" ng-repeat="coa in vm.coas">{{coa.DESCRIPTION}}</option>
 								  	</select>
 									</td>
-									<td class='center'><input type="text" ng-model="var.DESCRIPTION"></td>
-									<td class='center'><input type="text" ng-model="var.REMARKS"></td>
-									<td class='center'><input type="text" ng-model="var.QUANTITY"></td>
-									<td class='center'><input type="text" ng-model="var.UNIT_PRICE"></td>
-									<td class='center'><input type="text" ng-model="var.GST_TYPE"></td>
-									<td class='center'><input type="text" ng-model="var.GST_RATE"></td>
-									<td class='center'><input type="text" ng-model="var.DISCOUNT"></td>
+									<td class=''><input class="form-control" type="text" ng-model="var.DESCRIPTION"></td>
+									<td class=''><input class="form-control" type="text" ng-model="var.REMARKS"></td>
+									<td class=''><input class="form-control" type="text" ng-model="var.QUANTITY" style="width:100%"></td>
+									<td class=''><input class="form-control" type="text" ng-model="var.UNIT_PRICE" style="width:100%"></td>
+									<td class=''><input class="form-control" type="text" ng-model="var.GST_TYPE" style="width:100%"></td>
+									<td class=''><input class="form-control" type="text" ng-model="var.GST_RATE" style="width:100%"></td>
+									<td class=''><input class="form-control" type="text" ng-model="var.DISCOUNT" style="width:100%"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -114,12 +125,6 @@
 	<!-- /.main-content -->
 </div>
 <!-- /.main-container -->
-
-<c:if test="${'edit' == msg }">
-	<div>
-		<iframe name="treeFrame" id="treeFrame" frameborder="0" src="<%=basePath%>/accountpayablemx/list.do?ACCOUNTPAYABLE_ID=${pd.ACCOUNTPAYABLE_ID}" style="margin:0 auto;width:805px;height:368px;;"></iframe>
-	</div>
-</c:if>
 
 <footer>
 <div style="width: 100%;padding-bottom: 2px;" class="center">
@@ -152,6 +157,7 @@
 		vm.ap.mx = [];
 		vm.apItem = {ACCOUNTPAYABLEMX_ID:'', COST_TYPE:'', DISCRIPTION:'', REMARKS:'', QUANTITY:'', UNIT_PRICE:'', GST_TYPE:'', GST_RATE:'',DISCOUNT:''};
 		vm.suppliers = [];
+		vm.coas = [];
 		
 		for(var i=0; i<8; i++) {
 			vm.ap.mx.push({ACCOUNTPAYABLEMX_ID:i, COST_TYPE:'', DISCRIPTION:'', REMARKS:'', QUANTITY:'', UNIT_PRICE:'', GST_TYPE:'', GST_RATE:'',DISCOUNT:''});
@@ -166,6 +172,19 @@
             });
 		}
 		
+		fetchAllCOAs();
+		//fetch all chart of accounts
+		function fetchAllCOAs() {
+			serviceFactory.fetchAllObjects('chartofaccount/listSvc/')
+            .then(function(d) { vm.coas = d.model.varList;},
+            function(errResponse){
+                console.error('Error while fetching Objects on controller');
+            });
+		}
+		
+		vm.changeCOD = function(mx) {
+			
+		}
 		
 	})
 		$(top.hangge());

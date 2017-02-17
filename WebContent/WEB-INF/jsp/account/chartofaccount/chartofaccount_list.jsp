@@ -61,7 +61,7 @@
 									<th class="center">Description</th>
 									<th class="center">Account Type</th>
 									<th class="center">Current Openning</th>
-									<th class="center">Control Account</th>
+									<th class="center">GST TYPE</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -81,7 +81,7 @@
 											<td class='center'>${var.DESCRIPTION}</td>
 											<td class='center'>${var.ACCOUNT_TYPE}</td>
 											<td class='center'>${var.CURRENT_OPENNING}</td>
-											<td class='center'>${var.CONTROL_ACCOUNT}</td>
+											<td class='center'>${var.GST_TYPE}</td>
 											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
 												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>

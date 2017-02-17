@@ -59,9 +59,21 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Control Account:</td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">GST Type:</td>
 								<td>
-								<input type="hidden" id="CONTROL_ACCOUNT" name="CONTROL_ACCOUNT" value="0">
+									<select class="chosen-select form-control" name="GST_TYPE" id="GST_TYPE" 
+									data-placeholder="GST Type" style="vertical-align:top;width: 98%;">
+									<option value="${pd.GST_TYPE}" selected="selected">${pd.GST_TYPE}</option>
+									<option value="SR">Standard Rate</option>
+									<option value="NA">Non Application</option>
+								  	</select>
+								  	<input type="hidden" id="CONTROL_ACCOUNT" name="CONTROL_ACCOUNT" value="0">
+								</td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">GST Type:</td>
+								<td>
+									<input type="text" name="GST_RATE" id="GST_RATE" value="${pd.GST_RATE}" maxlength="255" placeholder="GST Rate" title="GST Rate" style="width:98%;"/>
 								</td>
 							</tr>
 							<tr>

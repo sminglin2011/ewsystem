@@ -2,6 +2,7 @@ package com.fh.service.account.accountpayable;
 
 import java.util.List;
 import com.fh.entity.Page;
+import com.fh.entity.account.AccountPayable;
 import com.fh.util.PageData;
 
 /** 
@@ -17,6 +18,12 @@ public interface AccountPayableManager{
 	 * @throws Exception
 	 */
 	public void save(PageData pd)throws Exception;
+	
+	/**新增
+	 * @param ap
+	 * @throws Exception
+	 */
+	public void saveAP(AccountPayable ap)throws Exception;
 	
 	/**删除
 	 * @param pd

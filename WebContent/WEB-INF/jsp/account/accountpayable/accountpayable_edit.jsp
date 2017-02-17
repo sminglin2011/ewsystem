@@ -128,8 +128,8 @@
 
 <footer>
 <div style="width: 100%;padding-bottom: 2px;" class="center">
-	<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
-	<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+	<a class="btn btn-mini btn-primary" ng-click="vm.save();">Save</a>
+	<a class="btn btn-mini btn-danger" ng-click="vm.close();">Cancel</a>
 </div>
 </footer>
 
@@ -153,9 +153,9 @@
 	'use strict';
 	angular.module("app").controller('myCtrl', function($scope, $http, serviceFactory) {
 		var vm = this;
-		vm.ap = {};
+		vm.ap = {date:'2017-02-17', terms:'COD', supplier_name: 'aa'};
+		vm.ap.creditor = 20000;
 		vm.ap.mx = [];
-		vm.apItem = {ACCOUNTPAYABLEMX_ID:'', COST_TYPE:'', DISCRIPTION:'', REMARKS:'', QUANTITY:'', UNIT_PRICE:'', GST_TYPE:'', GST_RATE:'',DISCOUNT:''};
 		vm.suppliers = [];
 		vm.coas = [];
 		
@@ -193,9 +193,29 @@
 					mx.DISCOUNT = 0;
 					return false;
 				}
-			})
+			});
 		}
-		
+		vm.close = function(){
+			console.log("close");
+			var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+			parent.layer.close(index); //再执行关闭 
+		}
+		vm.save = function(){
+			console.log("1vm.ap",JSON.stringify(vm.ap));
+			
+			//serviceFactory.postDataJson('http://localhost:8090/ewsystem/accountpayable/listStr/save', vm.ap).then(function(d){console.log("success");}, function(){console.log("error")});
+			$http({
+	            url: 'accountpayable/saveAp',
+	            method: "POST",
+	            data: JSON.stringify(vm.ap)
+	          }
+	        ).success(function(data){
+            	console.log('success');
+            }).error(function(data){
+            	console.log("error", data);
+            	//layer.msg('system run ajax error,'+data, { icon : 5, time : 5000 });
+            });
+		}
 	}) // end angular
 		$(top.hangge());
 		//保存

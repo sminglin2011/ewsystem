@@ -120,12 +120,12 @@ public class CreateCodeController extends BaseController {
 		}
 		Map<String,Object> root = new HashMap<String,Object>();		//创建数据模型
 		root.put("fieldList", fieldList);
-		root.put("faobject", faobject.toUpperCase());				//主附结构用，主表名
+		root.put("faobject", faobject.toLowerCase());				//主附结构用，主表名 toUpperCase
 		root.put("TITLE", TITLE);									//说明
 		root.put("packageName", packageName);						//包名
 		root.put("objectName", objectName);							//类名
 		root.put("objectNameLower", objectName.toLowerCase());		//类名(全小写)
-		root.put("objectNameUpper", objectName.toUpperCase());		//类名(全大写)
+		root.put("objectNameUpper", objectName.toLowerCase());		//类名(全大写) toUpperCase 
 		root.put("tabletop", tabletop);								//表前缀	
 		root.put("nowDate", new Date());							//当前日期
 		

@@ -6,7 +6,14 @@ angular.module('app').factory('serviceFactory', ['$http', '$q', function($http, 
 			    var factory = {
 			        fetchAllObjects: fetchAllObjects,
 			        postData: postData,
+			        postDataJson: postDataJson,
+			        creditor: creditor,
+			        debitor: 10000
 			    };
+			    function creditor() {
+			    	var deferred = $q.defer();
+			    	deferred.resolve(20000);
+			    }
 			    function fetchAllObjects(url) {
 			        var deferred = $q.defer();
 			        $http.get(url,{datatype:"json"}) //REST_SERVICE_URI
@@ -36,6 +43,26 @@ angular.module('app').factory('serviceFactory', ['$http', '$q', function($http, 
 			  	    	console.error('Error while updating Object on service');
 		                deferred.reject(errResponse);
 			  	    });
+			        
+			        return deferred.promise;
+			    }
+			    function postDataJson(url, obj){
+			    	console.log("post 1 data json ", url, obj);
+			    	var deferred = $q.defer();
+			    	$http({
+			            url: url,
+			            method: "POST",
+			            data: obj,
+			            headers: {
+			            	'Content-Type': 'application/json; charset=UTF-8'
+			            }
+			          }
+			        ).success(function(data){
+		            	console.log('success');
+		            }).error(function(data){
+		            	console.log("error", data);
+		            	//layer.msg('system run ajax error,'+data, { icon : 5, time : 5000 });
+		            });
 			        
 			        return deferred.promise;
 			    }

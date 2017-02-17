@@ -9,16 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
+import com.fh.entity.account.AccountPayable;
 import com.fh.util.AppUtil;
+import com.fh.util.JsonView;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
@@ -202,9 +208,23 @@ public class AccountPayableController extends BaseController {
 		return mv;
 	}
 	
-	@InitBinder
-	public void initBinder(WebDataBinder binder){
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
-	}
+//	@InitBinder
+//	public void initBinder(WebDataBinder binder){
+//		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+//	}
+	
+	//------------------- Save Object --------------------------------------------------------
+    @ResponseBody
+    @RequestMapping(value = "/saveAp", method = RequestMethod.POST)
+    public Object updateCompany(HttpServletResponse response, @RequestBody AccountPayable ap) throws Exception { //ResponseEntity<Object>
+    	System.out.println("coming saving controller");
+    	ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		System.out.println("ap =========== " + ap);
+		ap.setAccountpayable_ID(get32UUID());
+		accountpayableService.saveAP(ap);
+		return JsonView.Render(mv, response);
+    }
 }

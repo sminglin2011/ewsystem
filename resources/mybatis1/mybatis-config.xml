@@ -18,6 +18,11 @@
 		<typeAlias type="com.fh.util.PageData" alias="pd"/>
 		<!-- 分页 -->
 		<typeAlias type="com.fh.entity.Page" alias="Page"/>
+		
+		<!-- sming -->
+		<typeAlias type="com.fh.entity.account.AccountPayable" alias="ap"/>
+		<typeAlias type="com.fh.entity.account.AccountPayableMx" alias="apMx"/>
+		
 	</typeAliases>
 	
 	<plugins>

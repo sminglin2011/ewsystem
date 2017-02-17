@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.Page;
+import com.fh.entity.account.AccountPayable;
 import com.fh.util.PageData;
 import com.fh.service.account.accountpayable.AccountPayableManager;
 
@@ -26,6 +27,13 @@ public class AccountPayableService implements AccountPayableManager{
 	 */
 	public void save(PageData pd)throws Exception{
 		dao.save("AccountPayableMapper.save", pd);
+	}
+	/**新增
+	 * @param ap
+	 * @throws Exception
+	 */
+	public void saveAP(AccountPayable ap)throws Exception {
+		dao.save("AccountPayableMapper.saveAP", ap);
 	}
 	
 	/**删除

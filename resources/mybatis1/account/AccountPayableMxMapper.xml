@@ -4,36 +4,36 @@
 	
 	<!--表名 -->
 	<sql id="tableName">
-		EW_ACCOUNTPAYABLEMX
+		EW_accountpayablemx
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		AP_NUMBER,	
-		COST_TYPE,	
-		DESCRIPTION,	
-		REMARKS,	
-		QUANTITY,	
-		UNIT_PRICE,	
-		GST_TYPE,	
-		GST_RATE,	
-		DISCOUNT,	
-		ACCOUNTPAYABLEMX_ID,
+		cost_type,	
+		description,	
+		remarks,	
+		quantity,	
+		unit_price,	
+		gst_type,	
+		gst_rate,	
+		discount,	
+		ledger_code,	
+		accountpayablemx_ID,
 		ACCOUNTPAYABLE_ID
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{AP_NUMBER},	
-		#{COST_TYPE},	
-		#{DESCRIPTION},	
-		#{REMARKS},	
-		#{QUANTITY},	
-		#{UNIT_PRICE},	
-		#{GST_TYPE},	
-		#{GST_RATE},	
-		#{DISCOUNT},	
-		#{ACCOUNTPAYABLEMX_ID},
+		#{cost_type},	
+		#{description},	
+		#{remarks},	
+		#{quantity},	
+		#{unit_price},	
+		#{gst_type},	
+		#{gst_rate},	
+		#{discount},	
+		#{ledger_code},	
+		#{accountpayablemx_ID},
 		#{ACCOUNTPAYABLE_ID}
 	</sql>
 	
@@ -53,7 +53,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTPAYABLEMX_ID = #{ACCOUNTPAYABLEMX_ID}
+			accountpayablemx_ID = #{accountpayablemx_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -61,18 +61,9 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			AP_NUMBER = #{AP_NUMBER},
-			COST_TYPE = #{COST_TYPE},
-			DESCRIPTION = #{DESCRIPTION},
-			REMARKS = #{REMARKS},
-			QUANTITY = #{QUANTITY},
-			UNIT_PRICE = #{UNIT_PRICE},
-			GST_TYPE = #{GST_TYPE},
-			GST_RATE = #{GST_RATE},
-			DISCOUNT = #{DISCOUNT},
-		ACCOUNTPAYABLEMX_ID = ACCOUNTPAYABLEMX_ID
+		accountpayablemx_ID = accountpayablemx_ID
 		where 
-		ACCOUNTPAYABLEMX_ID = #{ACCOUNTPAYABLEMX_ID}
+		accountpayablemx_ID = #{accountpayablemx_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -82,7 +73,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTPAYABLEMX_ID = #{ACCOUNTPAYABLEMX_ID}
+			accountpayablemx_ID = #{accountpayablemx_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -118,7 +109,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTPAYABLEMX_ID in
+			accountpayablemx_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
@@ -133,5 +124,5 @@
 		where
 			ACCOUNTPAYABLE_ID = #{ACCOUNTPAYABLE_ID}
 	</select>
-	<!-- fh313596790qq(青苔) -->
+	<!-- fh313596790qq(青苔) -->
 </mapper>

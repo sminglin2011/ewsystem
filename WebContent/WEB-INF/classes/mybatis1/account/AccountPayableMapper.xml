@@ -4,29 +4,31 @@
 	
 	<!--表名 -->
 	<sql id="tableName">
-		EW_ACCOUNTPAYABLE
+		EW_accountpayable
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		AP_NUMBER,	
-		SUPPLIER_ID,	
-		SUPPLIER_NAME,	
-		DATE,	
-		TERMS,	
-		VENDER_INVOICE,	
-		ACCOUNTPAYABLE_ID
+		ap_nomber,	
+		supplier_id,	
+		supplier_name,	
+		creditor,	
+		date,	
+		terms,	
+		vender_invoice,	
+		accountpayable_ID
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{AP_NUMBER},	
-		#{SUPPLIER_ID},	
-		#{SUPPLIER_NAME},	
-		#{DATE},	
-		#{TERMS},	
-		#{VENDER_INVOICE},	
-		#{ACCOUNTPAYABLE_ID}
+		#{ap_nomber},	
+		#{supplier_id},	
+		#{supplier_name},	
+		#{creditor},	
+		#{date},	
+		#{terms},	
+		#{vender_invoice},	
+		#{accountpayable_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -45,7 +47,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTPAYABLE_ID = #{ACCOUNTPAYABLE_ID}
+			accountpayable_ID = #{accountpayable_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -53,15 +55,15 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			AP_NUMBER = #{AP_NUMBER},
-			SUPPLIER_ID = #{SUPPLIER_ID},
-			SUPPLIER_NAME = #{SUPPLIER_NAME},
-			DATE = #{DATE},
-			TERMS = #{TERMS},
-			VENDER_INVOICE = #{VENDER_INVOICE},
-		ACCOUNTPAYABLE_ID = ACCOUNTPAYABLE_ID
+			ap_nomber = #{ap_nomber},
+			supplier_name = #{supplier_name},
+			creditor = #{creditor},
+			date = #{date},
+			terms = #{terms},
+			vender_invoice = #{vender_invoice},
+		accountpayable_ID = accountpayable_ID
 		where 
-		ACCOUNTPAYABLE_ID = #{ACCOUNTPAYABLE_ID}
+		accountpayable_ID = #{accountpayable_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -71,7 +73,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTPAYABLE_ID = #{ACCOUNTPAYABLE_ID}
+			accountpayable_ID = #{accountpayable_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -106,11 +108,22 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ACCOUNTPAYABLE_ID in
+			accountpayable_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
 	</delete>
 	
-	<!-- fh313596790qq(青苔) -->
+	<!-- sming -->
+	
+	<!-- 新增-->
+	<insert id="saveAP" parameterType="ap">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
 </mapper>

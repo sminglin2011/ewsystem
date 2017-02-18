@@ -15,7 +15,7 @@ public class AccountPayable implements Serializable{
 	 */
 	private static final long serialVersionUID = -3950029925051829912L;
 	
-	private String ap_nomber;
+	private String ap_number;
 	private String  supplier_id;	
 	private String  supplier_name;	
 	private String  creditor;	
@@ -25,14 +25,6 @@ public class AccountPayable implements Serializable{
 	private String  accountpayable_ID;
 	
 	private List<AccountPayableMx> mx = new ArrayList<>();
-
-	public String getAp_nomber() {
-		return ap_nomber;
-	}
-
-	public void setAp_nomber(String ap_nomber) {
-		this.ap_nomber = ap_nomber;
-	}
 
 	public String getSupplier_id() {
 		return supplier_id;
@@ -101,6 +93,14 @@ public class AccountPayable implements Serializable{
 
 	public void setMx(List<AccountPayableMx> mx) {
 		this.mx = mx;
+	}
+
+	public String getAp_number() {
+		return ap_number;
+	}
+
+	public void setAp_number(String ap_number) {
+		this.ap_number = ap_number;
 	}
 
 

@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AccountPayableMapper">
+<mapper namespace="AccountReceiptableMxMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		EW_accountpayable
+		EW_accountreceiptablemx
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		ap_number,	
-		supplier_id,	
-		supplier_name,	
-		creditor,	
-		date,	
-		terms,	
-		vender_invoice,	
-		accountpayable_ID
+		sales_type,	
+		description,	
+		remarks,	
+		quantity,	
+		unit_price,	
+		Gst_type,	
+		gst_rate,	
+		discount,	
+		ledger_code,	
+		accountreceiptablemx_ID,
+		accountreceiptable_ID
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{ap_number},	
-		#{supplier_id},	
-		#{supplier_name},	
-		#{creditor},	
-		#{date},	
-		#{terms},	
-		#{vender_invoice},	
-		#{accountpayable_ID}
+		#{sales_type},	
+		#{description},	
+		#{remarks},	
+		#{quantity},	
+		#{unit_price},	
+		#{Gst_type},	
+		#{gst_rate},	
+		#{discount},	
+		#{ledger_code},	
+		#{accountreceiptablemx_ID},
+		#{accountreceiptable_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -47,7 +53,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID = #{accountpayable_ID}
+			accountreceiptablemx_ID = #{accountreceiptablemx_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -55,15 +61,17 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			ap_number = #{ap_number},
-			supplier_name = #{supplier_name},
-			creditor = #{creditor},
-			date = #{date},
-			terms = #{terms},
-			vender_invoice = #{vender_invoice},
-		accountpayable_ID = accountpayable_ID
+			description = #{description},
+			remarks = #{remarks},
+			quantity = #{quantity},
+			unit_price = #{unit_price},
+			Gst_type = #{Gst_type},
+			gst_rate = #{gst_rate},
+			discount = #{discount},
+			ledger_code = #{ledger_code},
+		accountreceiptablemx_ID = accountreceiptablemx_ID
 		where 
-		accountpayable_ID = #{accountpayable_ID}
+		accountreceiptablemx_ID = #{accountreceiptablemx_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -73,7 +81,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID = #{accountpayable_ID}
+			accountreceiptablemx_ID = #{accountreceiptablemx_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -82,7 +90,8 @@
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
-		where 1=1
+		where
+		accountreceiptable_ID = #{pd.accountreceiptable_ID}
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
@@ -108,22 +117,20 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID in
+			accountreceiptablemx_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
 	</delete>
 	
-	<!-- sming -->
-	
-	<!-- 新增-->
-	<insert id="saveAP" parameterType="ap">
-		insert into 
-	<include refid="tableName"></include>
-		(
-	<include refid="Field"></include>
-		) values (
-	<include refid="FieldValue"></include>
-		)
-	</insert>
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			accountreceiptable_ID = #{accountreceiptable_ID}
+	</select>
+	<!-- sming -->
 </mapper>

@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AccountPayableMapper">
+<mapper namespace="AccountReceiptableMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		EW_accountpayable
+		EW_accountreceiptable
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		ap_number,	
-		supplier_id,	
-		supplier_name,	
-		creditor,	
+		ar_number,	
+		customer_id,	
+		customer_name,	
+		debitor,	
 		date,	
 		terms,	
-		vender_invoice,	
-		accountpayable_ID
+		gl_status,	
+		accountreceiptable_ID
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{ap_number},	
-		#{supplier_id},	
-		#{supplier_name},	
-		#{creditor},	
+		#{ar_number},	
+		#{customer_id},	
+		#{customer_name},	
+		#{debitor},	
 		#{date},	
 		#{terms},	
-		#{vender_invoice},	
-		#{accountpayable_ID}
+		#{gl_status},	
+		#{accountreceiptable_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -47,7 +47,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID = #{accountpayable_ID}
+			accountreceiptable_ID = #{accountreceiptable_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -55,15 +55,14 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			ap_number = #{ap_number},
-			supplier_name = #{supplier_name},
-			creditor = #{creditor},
+			ar_number = #{ar_number},
+			customer_id = #{customer_id},
+			customer_name = #{customer_name},
 			date = #{date},
 			terms = #{terms},
-			vender_invoice = #{vender_invoice},
-		accountpayable_ID = accountpayable_ID
+		accountreceiptable_ID = accountreceiptable_ID
 		where 
-		accountpayable_ID = #{accountpayable_ID}
+		accountreceiptable_ID = #{accountreceiptable_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -73,7 +72,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID = #{accountpayable_ID}
+			accountreceiptable_ID = #{accountreceiptable_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -108,22 +107,11 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID in
+			accountreceiptable_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
 	</delete>
 	
 	<!-- sming -->
-	
-	<!-- 新增-->
-	<insert id="saveAP" parameterType="ap">
-		insert into 
-	<include refid="tableName"></include>
-		(
-	<include refid="Field"></include>
-		) values (
-	<include refid="FieldValue"></include>
-		)
-	</insert>
 </mapper>

@@ -13,13 +13,18 @@
 <head>
 <base href="<%=basePath%>">
 <!-- jsp文件头和头部 -->
+<!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
-<!-- datatable
-
-
-<script type="text/javascript" src="static/datatable/js/jquery.js"></script>
-<script type="text/javascript" src="static/angular.js"></script>
+<!--
+<link rel="stylesheet" href="static/snd/bootstrap/css/bootstrap.css">
+ <link rel="stylesheet" href="static/snd/dataTables/media/css/jquery.dataTables.css">
+<link rel="stylesheet" href="static/snd/dataTables/media/css/dataTables.bootstrap.css">
  -->
+
+<script type="text/javascript" src="static/snd/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="static/snd/dataTables/media/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="static/snd/dataTables/media/js/dataTables.bootstrap.js"></script>
+
  <style type="text/css">
  
  </style>
@@ -82,20 +87,6 @@
 	</div>
 	<!-- /.main-container -->
 	<!-- 页面底部js¨ -->
-	<%@ include file="../../system/index/foot.jsp"%>
-	<!-- 
-	<script src="static/datatable/js/jquery.dataTables.js"></script>
-	<script src="static/datatable/js/dataTables.bootstrap.js"></script>
-	 -->
-	 
-	<!-- page specific plugin scripts -->
-	
-	<script src="static/html_UI/assets/js/dataTables/jquery.dataTables.js"></script>
-	
-	<script src="static/html_UI/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
-	<script src="static/html_UI/assets/js/dataTables/extensions/TableTools/js/dataTables.tableTools.js"></script>
-	<script src="static/html_UI/assets/js/dataTables/extensions/ColVis/js/dataTables.colVis.js"></script>
-	
 	
 	<!-- SND SMING
 	<script type="text/javascript" src="static/ui-bootstrap-tpls-2.5.0.js"></script>

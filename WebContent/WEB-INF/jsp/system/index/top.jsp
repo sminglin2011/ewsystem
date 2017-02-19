@@ -25,7 +25,11 @@
 		<script src="static/ace/js/html5shiv.js"></script>
 		<script src="static/ace/js/respond.js"></script>
 		<![endif]-->
-		<script src="static/js/jquery-1.7.2.js"></script>
-		<!-- <script src="lib/angular/angular.js"></script> -->
-		<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script> -->
+		
+		<!-- <script src="static/js/jquery-1.7.2.js"></script><script src="lib/angular/angular.js"></script> -->
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 		<script src="static/ng-select2/common/plugins/angular/angular.min.js"></script>
+		 -->
+		<script type="text/javascript" src="static/snd/jquery.js"></script>
+		<script type="text/javascript" src="static/snd/angular/angular.js"></script>
+		

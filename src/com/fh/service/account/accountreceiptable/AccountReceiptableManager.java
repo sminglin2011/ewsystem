@@ -2,6 +2,7 @@ package com.fh.service.account.accountreceiptable;
 
 import java.util.List;
 import com.fh.entity.Page;
+import com.fh.entity.account.AccountReceiptable;
 import com.fh.util.PageData;
 
 /** 
@@ -18,6 +19,12 @@ public interface AccountReceiptableManager{
 	 */
 	public void save(PageData pd)throws Exception;
 	
+	/**新增
+	 * @param ar
+	 * @throws Exception
+	 */
+	public void saveAr(AccountReceiptable ar)throws Exception;
+	
 	/**删除
 	 * @param pd
 	 * @throws Exception
@@ -29,6 +36,12 @@ public interface AccountReceiptableManager{
 	 * @throws Exception
 	 */
 	public void edit(PageData pd)throws Exception;
+	
+	/**修改
+	 * @param ap
+	 * @throws Exception
+	 */
+	public void editAR(AccountReceiptable ar)throws Exception;
 	
 	/**列表
 	 * @param page

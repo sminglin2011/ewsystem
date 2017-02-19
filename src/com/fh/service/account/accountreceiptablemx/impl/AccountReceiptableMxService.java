@@ -5,6 +5,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.Page;
+import com.fh.entity.account.AccountReceiptable;
+import com.fh.entity.account.AccountReceiptableMx;
 import com.fh.util.PageData;
 import com.fh.service.account.accountreceiptablemx.AccountReceiptableMxManager;
 
@@ -26,6 +28,14 @@ public class AccountReceiptableMxService implements AccountReceiptableMxManager{
 	 */
 	public void save(PageData pd)throws Exception{
 		dao.save("AccountReceiptableMxMapper.save", pd);
+	}
+	
+	/**新增
+	 * @param arMx
+	 * @throws Exception
+	 */
+	public void saveArMx(AccountReceiptableMx arMx)throws Exception{
+		dao.save("AccountReceiptableMxMapper.saveArMx", arMx);
 	}
 	
 	/**删除
@@ -77,7 +87,14 @@ public class AccountReceiptableMxService implements AccountReceiptableMxManager{
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception{
 		dao.delete("AccountReceiptableMxMapper.deleteAll", ArrayDATA_IDS);
 	}
-	
+	/**
+	 * 不做实际删除,只是修改明细表的主表 ID
+	 * @param zhubiao_ID
+	 * @throws Exception
+	 */
+	public void deleteAll(String zhubiao_ID) throws Exception {
+		dao.update("AccountReceiptableMxMapper.updateForDelete", zhubiao_ID);
+	}
 	/**查询明细总数
 	 * @param pd
 	 * @throws Exception
@@ -85,6 +102,15 @@ public class AccountReceiptableMxService implements AccountReceiptableMxManager{
 	public PageData findCount(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("AccountReceiptableMxMapper.findCount", pd);
 	}
-	
+	/**
+	 * 明细列表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> mxList (String accountreceiptable_ID) throws Exception{
+		return (List<PageData>)dao.findForList("AccountReceiptableMxMapper.mxList", accountreceiptable_ID);
+	}
 }
 

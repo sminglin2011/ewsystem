@@ -9,7 +9,7 @@
 			+ path + "/";
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app" ng-controller="myCtrl as vm">
 <head>
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
@@ -18,6 +18,8 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+
+
 </head>
 <body class="no-skin">
 
@@ -31,13 +33,14 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="accountreceiptable/list.do" method="post" name="Form" id="Form">
+						<form action="" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
 									<div class="nav-search">
 										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" 
+											autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" ng-model="vm.keyword"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -59,112 +62,20 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
-					
-						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
-							<thead>
-								<tr>
-									<th class="center" style="width:50px;">序号</th>
-									<th class="center">AR Number</th>
-									<th class="center">Customr ID</th>
-									<th class="center">Customer Name</th>
-									<th class="center">Debitor</th>
-									<th class="center">Date</th>
-									<th class="center">Terms</th>
-									<th class="center">GL Status</th>
-									<th class="center">操作</th>
-								</tr>
-							</thead>
-													
-							<tbody>
-							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
-									<c:if test="${QX.cha == 1 }">
-									<c:forEach items="${varList}" var="var" varStatus="vs">
-										<tr>
-											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.ar_number}</td>
-											<td class='center'>${var.customer_id}</td>
-											<td class='center'>${var.customer_name}</td>
-											<td class='center'>${var.debitor}</td>
-											<td class='center'>${var.date}</td>
-											<td class='center'>${var.terms}</td>
-											<td class='center'>${var.gl_status}</td>
-											<td class="center">
-												<c:if test="${QX.edit != 1 && QX.del != 1 }">
-												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
-												</c:if>
-												<div class="hidden-sm hidden-xs btn-group">
-													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.accountreceiptable_ID}');">
-														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
-													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.accountreceiptable_ID}');">
-														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
-													</a>
-													</c:if>
-												</div>
-												<div class="hidden-md hidden-lg">
-													<div class="inline pos-rel">
-														<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
-															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-														</button>
-			
-														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-															<c:if test="${QX.edit == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.accountreceiptable_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
-																	<span class="green">
-																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-															<c:if test="${QX.del == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="del('${var.accountreceiptable_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
-																	<span class="red">
-																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-														</ul>
-													</div>
-												</div>
-											</td>
-										</tr>
-									
-									</c:forEach>
-									</c:if>
-									<c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="100" class="center">您无权查看</td>
-										</tr>
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-							</tbody>
-						</table>
-						<div class="page-header position-relative">
-						<table style="width:100%;">
-							<tr>
-								<td style="vertical-align:top;">
-									<c:if test="${QX.add == 1 }">
-									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-									</c:if>
-								</td>
-								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-							</tr>
-						</table>
+						<div class="clearfix">
+							<div class="pull-right tableTools-container"></div>
 						</div>
+						<div class="table-header">
+							Billing
+						</div>
+						<table id="dynamic-table" class="table table-striped table-bordered table-hover"	
+							my-table="overrideOptions"
+				        	aa-data="sampleData"
+				        	ao-columns="columns"
+				        	ao-column-defs="columnDefs"
+				        	fn-row-callback="myCallback">
+						</table>
+						
 						</form>
 					
 						</div>
@@ -198,139 +109,94 @@
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<!-- datatable -->
+	<script type="text/javascript" src="static/datatable/jquery.dataTables.js"></script>
+	<!-- page specific plugin scripts -->
+	<script src="static/html_UI/assets/js/dataTables/jquery.dataTables.js"></script>
+	<script src="static/html_UI/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+	<script src="static/html_UI/assets/js/dataTables/extensions/TableTools/js/dataTables.tableTools.js"></script>
+	<script src="static/html_UI/assets/js/dataTables/extensions/ColVis/js/dataTables.colVis.js"></script>
+	<script type="text/javascript" src="static/ui-bootstrap-tpls-2.5.0.js"></script>
+	<!-- SND SMING -->
+	<script src="lib/layer/2.1/layer.js"></script>
+	<script src="static/js/SND-utils.js"></script>
+	<script type="text/javascript" src="static/js/snd/app.js"></script>
+	<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='static/html_UI/assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
+		</script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
-		//检索
-		function tosearch(){
-			top.jzts();
-			$("#Form").submit();
-		}
-		$(function() {
-		
-			//日期框
-			$('.date-picker').datepicker({
-				autoclose: true,
-				todayHighlight: true
-			});
-			
-			//下拉框
-			if(!ace.vars['touch']) {
-				$('.chosen-select').chosen({allow_single_deselect:true}); 
-				$(window)
-				.off('resize.chosen')
-				.on('resize.chosen', function() {
-					$('.chosen-select').each(function() {
-						 var $this = $(this);
-						 $this.next().css({'width': $this.parent().width()});
-					});
-				}).trigger('resize.chosen');
-				$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
-					if(event_name != 'sidebar_collapsed') return;
-					$('.chosen-select').each(function() {
-						 var $this = $(this);
-						 $this.next().css({'width': $this.parent().width()});
-					});
-				});
-				$('#chosen-multiple-style .btn').on('click', function(e){
-					var target = $(this).find('input[type=radio]');
-					var which = parseInt(target.val());
-					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
-					 else $('#form-field-select-4').removeClass('tag-input-style');
-				});
-			}
-			
-			
-			//复选框全选控制
-			var active_class = 'active';
-			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-				var th_checked = this.checked;//checkbox inside "TH" table header
-				$(this).closest('table').find('tbody > tr').each(function(){
-					var row = this;
-					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-				});
-			});
-		});
-		
-		//新增
-		function add(){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="新增";
-			 diag.URL = '<%=basePath%>accountreceiptable/goAdd.do';
-			 diag.Width = 500;
-			 diag.Height = 355;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 if('${page.currentPage}' == '0'){
-						 top.jzts();
-						 setTimeout("self.location=self.location",100);
-					 }else{
-						 nextPage(${page.currentPage});
-					 }
-				}
-				diag.close();
-			 };
-			 diag.show();
-		}
-		
-		//删除
-		function del(Id){
-			bootbox.confirm("确定要删除吗?", function(result) {
-				if(result) {
-					top.jzts();
-					var url = "<%=basePath%>accountreceiptable/delete.do?accountreceiptable_ID="+Id+"&tm="+new Date().getTime();
-					$.get(url,function(data){
-						if("success" == data.result){
-							nextPage(${page.currentPage});
-						}else if("false" == data.result){
-							top.hangge();
-							bootbox.dialog({
-								message: "<span class='bigger-110'>删除失败,请先删除明细数据!</span>",
-								buttons: 			
-								{
-									"button" :
-									{
-										"label" : "确定",
-										"className" : "btn-sm btn-success"
-									}
-								}
-							});
-						}
-					});
-				}
-			});
-		}
-		
-		//修改
-		function edit(Id){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>accountreceiptable/goEdit.do?accountreceiptable_ID='+Id;
-			 diag.Width = 800;
-			 diag.Height = 600;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 nextPage(${page.currentPage});
-				}
-				diag.close();
-			 };
-			 diag.show();
-		}
 		
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>accountreceiptable/excel.do';
 		}
+		app.controller("myCtrl", function($scope, $http, serviceFactory) {
+			var vm = this;
+			$scope.options = {};
+			$scope.overrideOptions = {
+				 ordering:  false,
+				 info: false,
+				 "pageLength": 3,
+				 buttons: [ 'copy', 'csv', 'print' ]
+			};
+			$scope.sampleData = '';
+			fetchAllObjects();
+			//fetch all chart of accounts
+			function fetchAllObjects() {
+				serviceFactory.fetchAllObjects('accountpayable/listSvc/')
+	            .then(function(d) { $scope.sampleData = d.model.varList; vm.QX = {add: d.model.QX.add, cha: d.model.QX.cha, del: d.model.QX.del, edit: d.model.QX.edit};},
+	            function(errResponse){
+	                console.error('Error while fetching Objects on controller');
+	            });
+			}
+			/* $scope.columnDefs = [ 
+	            { "mDataProp": "category", "aTargets":[0]},
+	            { "mDataProp": "name", "aTargets":[1] },
+	            { "mDataProp": "price", "aTargets":[2] }
+	        ]; */
+			$scope.columns = [ 
+	            {"title":"ID", width:"5%", "visible":true, "mDataProp": "accountpayable_ID"}
+	            ,{"title":"Customer Name", width:"15%", "visible":true, "mDataProp": "supplier_name"}
+	            ,{"title":"Contact Person", width:"10%", "visible":true, "mDataProp": "date"}
+	            ,{"title":"Telephone", width:"10%", "visible":true, mDataProp:'terms', orderable:false}
+	            ,{"title":"Action", width:"10%","visible":true, orderable:false, searchable: false
+	             , render: function(data, type, row) {
+	                 return "<a style='text-decoration:none' class='ml-5 edit' id='edit' href='javascript:;' title='Edit'><i class='Hui-iconfont Hui-iconfont-edit'></i></a>"
+	                                    +"<a style='text-decoration:none' class='ml-5 del' id='del' href='javascript:;'      title='Delete'><i class='Hui-iconfont Hui-iconfont-del3'></i></a>";
+	             }}
+					]; 
+			$scope.myCallback = function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {            
+		        $('td', nRow).find('.edit').bind('click', function() {
+		            $scope.$apply(function() {
+		                $scope.editFunction(aData);
+		            });
+		        });
+		        $('td', nRow).find('.del').bind('click', function() {
+		        	var tr = nRow;
+		            $scope.$apply(function() {
+		                $scope.delFunction(aData, tr);
+		            });
+		        });
+		        return nRow;
+		    };
+		    
+		    $scope.editFunction = function(obj) {
+		    	$scope.customer = obj;
+	            backTop();
+		    }
+			$scope.delFunction = function(obj, tr) {
+				/* layer.msg('delete model, in development!', {icon: 5,time:2000}); */
+				console.log("deleteObj", obj);
+				/* angular.forEach($scope.sampleData, function(item, index){
+		            if (obj.id === item.id) {
+				      $scope.sampleData.splice(index, 1);
+				      return;
+				    };
+				  }); */
+				confimDelete($http, "deleteCustomer", {customerId:obj.id}, tr)
+		    }
+		})
 	</script>
 
 

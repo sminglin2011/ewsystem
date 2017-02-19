@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.Page;
+import com.fh.entity.account.AccountReceiptable;
 import com.fh.util.PageData;
 import com.fh.service.account.accountreceiptable.AccountReceiptableManager;
 
@@ -28,6 +29,14 @@ public class AccountReceiptableService implements AccountReceiptableManager{
 		dao.save("AccountReceiptableMapper.save", pd);
 	}
 	
+	/**新增
+	 * @param ar
+	 * @throws Exception
+	 */
+	public void saveAr(AccountReceiptable ar)throws Exception{
+		dao.save("AccountReceiptableMapper.saveAr", ar);
+	}
+	
 	/**删除
 	 * @param pd
 	 * @throws Exception
@@ -43,7 +52,13 @@ public class AccountReceiptableService implements AccountReceiptableManager{
 	public void edit(PageData pd)throws Exception{
 		dao.update("AccountReceiptableMapper.edit", pd);
 	}
-	
+	/**修改
+	 * @param ap
+	 * @throws Exception
+	 */
+	public void editAR(AccountReceiptable ar)throws Exception{
+		dao.update("AccountReceiptableMapper.edit", ar);
+	}
 	/**列表
 	 * @param page
 	 * @throws Exception

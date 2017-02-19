@@ -33,7 +33,9 @@
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Name Key:</td>
-								<td><input type="text" name="NAME_KEY" id="NAME_KEY" value="${pd.NAME_KEY}" maxlength="255" placeholder="Name Key" title="Name Key" style="width:98%;"/></td>
+								<td><input type="text" name="NAME_KEY" id="NAME_KEY" value="${pd.NAME_KEY}" 
+								<c:if test="${pd. SYSTEMPARAMETER_ID != null }">readonly="readonly"</c:if>
+								maxlength="255" placeholder="Name Key"  title="Name Key" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Name Value:</td>

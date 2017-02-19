@@ -56,11 +56,11 @@
 		<url-pattern>/druid/*</url-pattern>
 	</servlet-mapping>
 	<!-- 连接池 启用Web监控统计功能   end-->
-
+<!-- 
 	<filter>
 		<filter-name>loginFilter</filter-name>
 		<filter-class>com.fh.filter.LoginFilter</filter-class>
-	</filter>
+	</filter> -->
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
 	</listener>

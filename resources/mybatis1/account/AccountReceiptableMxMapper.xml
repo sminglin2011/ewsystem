@@ -14,7 +14,7 @@
 		remarks,	
 		quantity,	
 		unit_price,	
-		Gst_type,	
+		gst_type,	
 		gst_rate,	
 		discount,	
 		ledger_code,	
@@ -29,7 +29,7 @@
 		#{remarks},	
 		#{quantity},	
 		#{unit_price},	
-		#{Gst_type},	
+		#{gst_type},	
 		#{gst_rate},	
 		#{discount},	
 		#{ledger_code},	
@@ -47,7 +47,16 @@
 	<include refid="FieldValue"></include>
 		)
 	</insert>
-	
+	<!-- 新增-->
+	<insert id="saveArMx" parameterType="arMx">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
 	<!-- 删除-->
 	<delete id="delete" parameterType="pd">
 		delete from
@@ -65,7 +74,7 @@
 			remarks = #{remarks},
 			quantity = #{quantity},
 			unit_price = #{unit_price},
-			Gst_type = #{Gst_type},
+			gst_type = #{gst_type},
 			gst_rate = #{gst_rate},
 			discount = #{discount},
 			ledger_code = #{ledger_code},
@@ -73,6 +82,14 @@
 		where 
 		accountreceiptablemx_ID = #{accountreceiptablemx_ID}
 	</update>
+	
+	<!-- delete all by zhubiao ID -->
+	<delete id="updateForDelete" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+		accountreceiptable_ID = #{accountreceiptable_ID}
+	</delete>
 	
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
@@ -133,4 +150,14 @@
 			accountreceiptable_ID = #{accountreceiptable_ID}
 	</select>
 	<!-- sming -->
+
+	<!-- 列表 -->
+	<select id="mxList" parameterType="String" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where
+		accountreceiptable_ID = #{pd.accountreceiptable_ID}
+	</select>
 </mapper>

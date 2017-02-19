@@ -1,166 +1,151 @@
-'use strict';
+var app = angular.module('app', []);
 /**
- * 带筛选功能的下拉框
- * 使用方法 <select ngc-select-search name="select1" ng-options="">
- * 说明[ select 一定要有name,ng-options 属性]
+ * select2封装
+ * @param {scope} ng-model 选中的ID
+ * @param {scope} select2-model 选中的详细内容
+ * @param {scope} config 自定义配置
+ * @param {String} [query] 内置的配置 (怎么也还得默认一个config)
+ * @example
+ * <input select2 ng-model="a" select2-model="b" config="config" type="text" placeholder="占位符" />
+ * <input select2 ng-model="a" select2-model="b" config="default" query="member" type="text" placeholder="占位符" />
+ * <select select2 ng-model="b" class="form-control"></select>
  */
-		 var app = angular.module("app",[])
-		 .directive('ngcSelectSearch', function($animate, $compile, $parse) {
-		 
-		   function parseOptions(optionsExp, element, scope) {
-		     // ngOptions里的正则
-		     var NG_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?(?:\s+disable\s+when\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?$/;
-		 
-		     var match = optionsExp.match(NG_OPTIONS_REGEXP);
-		     if (!(match)) {
-		       console.log('ng-options 表达式有误')
-		     }
-		     var valueName = match[5] || match[7];
-		     var keyName = match[6];
-		     var displayFn = $parse(match[2]);
-		     var keyFn = $parse(match[1]);
-		     var valuesFn = $parse(match[8]);
-		 
-		     var labelArray = [],
-		       idArray = [],
-		       optionValues = [];
-		     scope.$watch(match[8], function(newValue, oldValue) {
-		       if (newValue && newValue.length > 0) {
-		         optionValues = valuesFn(scope) || [];
-		         labelArray = [];
-		         idArray = []
-		         for (var index = 0, l = optionValues.length; index < l; index++) {
-		           var it = optionValues[index];
-		           if (match[2] && match[1]) {
-		             var localIt = {};
-		             localIt[valueName] = it;
-		             var label = displayFn(scope, localIt);
-		             var dataId = keyFn(scope, localIt);
-		             labelArray.push(label);
-		             idArray.push(dataId);
-		           }
-		         }
-		 
-		         scope.options = {
-		           'optionValues': optionValues,
-		           'labelArray': labelArray,
-		           'idArray': idArray
-		         }
-		       }
-		     });
-		   }
-		   return {
-		     restrict: 'A',
-		     require: ['ngModel'],
-		     priority: 100,
-		     replace: false,
-		     scope: true,
-		     template: '<div class="chose-container">' +
-		       '<div class="chose-single"><span class="j-view"></span><i class="glyphicon glyphicon-remove"></i></div>' +
-		       '<div class="chose-drop chose-hide j-drop">' +
-		       '<div class="chose-search">' +
-		       '<input class="j-key" type="text" autocomplete="off">' +
-		       '</div>' +
-		       '<ul class="chose-result">' +
-		       // '<li ng-repeat="'+repeatTempl+'" data-id="'+keyTempl+'" >{{'+ valueTempl+'}}</li>'+
-		       '</ul>' +
-		       '</div>' +
-		       '</div>',
-		     link: {
-		       pre: function selectSearchPreLink(scope, element, attr, ctrls) {
-		 
-		         var tmplNode = $(this.template).first();
-		 
-		         var modelName = attr.ngModel,
-		           name = attr.name? attr.name:('def'+Date.now());
-		         tmplNode.attr('id', name + '_chosecontianer');
-		 
-		         $animate.enter(tmplNode, element.parent(), element);
-		       },
-		       post: function selectSearchPostLink(scope, element, attr, ctrls) {
-		         var choseNode = element.next(); //$('#'+attr.name +'_chosecontianer');
-		         choseNode.addClass(attr.class);
-		         element.addClass('chose-hide');
-		         // 当前选中项
-		         var ngModelCtrl = ctrls[0];
-		         if (!ngModelCtrl || !attr.name) return;
-		 
-		         parseOptions(attr.ngOptions, element, scope);
-		         var rs = {};
-		 
-		         function setView() {
-		           var currentKey = ngModelCtrl.$modelValue;
-		           if (isNaN(currentKey) || !currentKey) {
-		             currentKey = '';
-		             choseNode.find('.j-view:first').text('请选择');
-		             choseNode.find('i').addClass('chose-hide');
-		           }
-		           if ((currentKey + '').length > 0) {
-		             for (var i = 0, l = rs.idArray.length; i < l; i++) {
-		               if (rs.idArray[i] == currentKey) {
-		                 choseNode.find('.j-view:first').text(rs.labelArray[i]);
-		                 choseNode.find('i').removeClass('chose-hide');
-		                 break;
-		               }
-		             }
-		           }
-		         }
-		 
-		         function setViewAndData() {
-		           if (!scope.options) {
-		             return;
-		           }
-		           rs = scope.options;
-		           setView();
-		         }
-		         scope.$watchCollection('options', setViewAndData);
-		         scope.$watch(attr.ngModel, setView);
-		 
-		 
-		         function getListNodes(value) {
-		           var nodes = [];
-		           value = $.trim(value);
-		           for (var i = 0, l = rs.labelArray.length; i < l; i++) {
-		             if (rs.labelArray[i].indexOf(value) > -1) {
-		               nodes.push($('<li>').data('id', rs.idArray[i]).text(rs.labelArray[i]))
-		             }
-		           }
-		           return nodes;
-		 
-		         }
-		         choseNode.on('keyup', '.j-key', function() {
-		           // 搜索输入框keyup，重新筛选列表
-		           var value = $(this).val();
-		           choseNode.find('ul:first').empty().append(getListNodes(value));
-		           return false;
-		         }).on('click', function() {
-		           choseNode.find('.j-drop').removeClass('chose-hide');
-		           if (choseNode.find('.j-view:first').text() != '请选择') {
-		             choseNode.find('i').removeClass('chose-hide');
-		           }
-		           choseNode.find('ul:first').empty().append(getListNodes(choseNode.find('.j-key').val()));
-		           return false;
-		         }).on('click', 'ul>li', function() {
-		           var _this = $(this);
-		           ngModelCtrl.$setViewValue(_this.data('id'));
-		           ngModelCtrl.$render();
-		           choseNode.find('.j-drop').addClass('chose-hide');
-		           return false;
-		 
-		         }).on('click', 'i', function() {
-		           ngModelCtrl.$setViewValue('');
-		           ngModelCtrl.$render();
-		           choseNode.find('.j-view:first').text('请选择');
-		           return false;
-		 
-		         });
-		         $(document).on("click", function() {
-		           $('.j-drop').addClass('chose-hide');
-		           choseNode.find('i').addClass('chose-hide');
-		           return false;
-		         });
-		 
-		       }
-		     }
-		   };
-		 })
+app.directive('select2', function (select2Query) {
+    return {
+        restrict: 'A',
+        scope: {
+            config: '=',
+            ngModel: '=',
+            select2Model: '='
+        },
+        link: function (scope, element, attrs) {
+            // 初始化
+            var tagName = element[0].tagName,
+                config = {
+                    allowClear: true,
+                    multiple: !!attrs.multiple,
+                    placeholder: attrs.placeholder || ' '   // 修复不出现删除按钮的情况
+                };
+
+            // 生成select
+            if(tagName === 'SELECT') {
+                // 初始化
+                var $element = $(element);
+                delete config.multiple;
+
+                $element
+                    .prepend('<option value=""></option>')
+                    .val('')
+                    .select2(config);
+
+                // model - view
+                scope.$watch('ngModel', function (newVal) {
+                    setTimeout(function () {
+                        $element.find('[value^="?"]').remove();    // 清除错误的数据
+                        $element.select2('val', newVal);
+                    },0);
+                }, true);
+                return false;
+            }
+
+            // 处理input
+            if(tagName === 'INPUT') {
+                // 初始化
+                var $element = $(element);
+
+                // 获取内置配置
+                if(attrs.query) {
+                    scope.config = select2Query[attrs.query]();
+                }
+
+                // 动态生成select2
+                scope.$watch('config', function () {
+                    angular.extend(config, scope.config);
+                    $element.select2('destroy').select2(config);
+                }, true);
+
+                // view - model
+                $element.on('change', function () {
+                    scope.$apply(function () {
+                        scope.select2Model = $element.select2('data');
+                    });
+                });
+
+                // model - view
+                scope.$watch('select2Model', function (newVal) {
+                    $element.select2('data', newVal);
+                }, true);
+
+                // model - view
+                scope.$watch('ngModel', function (newVal) {
+                    // 跳过ajax方式以及多选情况
+                    if(config.ajax || config.multiple) { return false }
+
+                    $element.select2('val', newVal);
+                }, true);
+            }
+        }
+    }
+});
+
+/**
+ * select2 内置查询功能
+ */
+app.factory('select2Query', function ($timeout) {
+    return {
+        testAJAX: function () {
+            var config = {
+                minimumInputLength: 1,
+                ajax: {
+                    url: "http://localhost8080/ewsystem/chartofaccount/listSvc",
+                    dataType: 'json',
+//                    data: function (term) {
+//                        return {
+//                            q: term,
+//                            page_limit: 10,
+//                            apikey: "ju6z9mjyajq2djue3gbvv26t"
+//                        };
+//                    },
+                    results: function (data, page) {
+                        return {results: data.movies};
+                    }
+                },
+                formatResult: function (data) {
+                    return data.title;
+                },
+                formatSelection: function (data) {
+                    return data.title;
+                }
+            };
+
+            return config;
+        }
+    }
+});
+
+app.controller('appCtrl', function ($scope, $timeout) {
+    $scope.config1 = {
+        data: [],
+        placeholder: '尚无数据'
+    };
+
+    $timeout(function () {
+        $scope.config1.data = [{id:1,text:'bug'},{id:2,text:'duplicate'},{id:3,text:'invalid'},{id:4,text:'wontfix'}]
+        $scope.config1.placeholder = '加载完毕'
+    }, 1000);
+
+
+    $scope.config2 = [
+        {id: 6, text: '来自ng-repeat'},
+        {id: 7, text: '来自ng-repeat'},
+        {id: 8, text: '来自ng-repeat'}
+    ];
+
+    $scope.config3 = {
+        data: [{id:1,text:'bug'},{id:2,text:'duplicate'},{id:3,text:'invalid'},{id:4,text:'wontfix'}]
+        // 其他配置略，可以去看看内置配置中的ajax配置
+    };
+
+});
+
+angular.bootstrap(document, ['app']);

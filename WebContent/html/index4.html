@@ -1,0 +1,98 @@
+<!doctype html>
+<html ng-app="ui.bootstrap.demo">
+  <head>
+  	<meta charset="utf-8">
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.4.0.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+<style type="text/css">
+  form.tab-form-demo .tab-pane {
+    margin: 20px 20px;
+  }
+</style>
+
+<div ng-controller="TabsDemoCtrl">
+  Tabs using nested forms:<button ng-click="alertMe()">next</button>
+  <form name="outerForm" class="tab-form-demo">
+    <uib-tabset active="activeForm">
+      <uib-tab index="$index" heading="{{tab.title}}" ng-repeat="tab in tabs">
+        <ng-form name="nestedForm">
+          <div class="form-group">
+            <label>Name {{tab.content}}</label>
+            <input type="text" class="form-control" required ng-model="model.name"/>
+            <uib-accordion close-others="oneAtATime">
+			    <div uib-accordion-group class="panel-default" heading="Delivery 1">
+			      <p>The body of the uib-accordion group grows to fit the contents</p>
+			      <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+			      <div ng-repeat="item in items">{{item}}</div>
+			    </div>
+			    <div uib-accordion-group class="panel-default" heading="Delivery 2">
+			      <p>The body of the uib-accordion group grows to fit the contents</p>
+			      <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+			      <div ng-repeat="item in items">{{item}}</div>
+			    </div>
+			    <div uib-accordion-group class="panel-default" heading="Delivery 3">
+			      <p>The body of the uib-accordion group grows to fit the contents</p>
+			      <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+			      <div ng-repeat="item in items">{{item}}</div>
+			    </div>
+			    <div uib-accordion-group class="panel-default" heading="Delivery 4">
+			      <p>The body of the uib-accordion group grows to fit the contents</p>
+			      <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+			      <div ng-repeat="item in items">{{item}}</div>
+			    </div>
+			  </uib-accordion>
+          </div>
+        </ng-form>
+      </uib-tab>
+      
+    </uib-tabset>
+  </form>
+  Model:
+  <pre>{{ model | json }}</pre>
+  Nested Form:{{customer.lastDay | date}}
+  <pre>{{ outerForm.nestedForm | json }}</pre>
+</div>
+  </body>
+ <script type="text/javascript">
+ angular.module('ui.bootstrap.demo', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+ angular.module('ui.bootstrap.demo').controller('TabsDemoCtrl', function ($scope, $window) {
+	$scope.customer = {};
+	$scope.customer.firstDay = new Date();
+	var firstDay = $scope.customer.firstDay;
+	$scope.customer.lastDay = new Date(firstDay.getTime() + 40*24*60*60*1000)
+	console.log($scope.customer);
+	$scope.tabs = [];
+	for (var i=0; i <25; i++) {
+		firstDay = new Date(firstDay.getTime() + 24*60*60*1000);
+		$scope.tabs.push(
+				{title:firstDay.getDate()+"/"+(firstDay.getMonth()+1), content:firstDay}
+		);
+	}
+	
+
+   $scope.alertMe = function() {
+	   firstDay = new Date(firstDay.getTime()+24*60*60*1000);
+	   $scope.tabs=[];
+	   for (var i=0; i <25; i++) {
+		   firstDay = new Date(firstDay.getTime() + 24*60*60*1000);
+			$scope.tabs.push(
+					{title:firstDay.getDate()+"/"+(firstDay.getMonth()+1), content:firstDay}
+			);
+		}
+     //setTimeout(function() {
+     //  $window.alert('You\'ve selected the alert tab!');
+    // });
+   };
+
+   $scope.model = {
+     name: 'Tabs'
+   };
+ });
+ </script>
+</html>

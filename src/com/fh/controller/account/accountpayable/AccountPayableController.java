@@ -139,7 +139,7 @@ public class AccountPayableController extends BaseController {
 		page.setPd(pd);
 		List<PageData>	varList = accountpayableService.list(page);	//列出AccountPayable列表
 		mv.setViewName("account/accountpayable/accountpayable_list");
-		mv.addObject("varList", varList);
+//		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
@@ -238,6 +238,7 @@ public class AccountPayableController extends BaseController {
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		mv.addObject("page", page);
 		return JsonView.Render(mv, response);
 	}
 	//-------------------Retrieve One Objects--------------------------------------------------------

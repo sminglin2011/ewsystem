@@ -22,6 +22,8 @@
 		<!-- sming -->
 		<typeAlias type="com.fh.entity.account.AccountPayable" alias="ap"/>
 		<typeAlias type="com.fh.entity.account.AccountPayableMx" alias="apMx"/>
+		<typeAlias type="com.fh.entity.account.AccountReceiptable" alias="ar"/>
+		<typeAlias type="com.fh.entity.account.AccountReceiptableMx" alias="arMx"/>
 		
 	</typeAliases>
 	

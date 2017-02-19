@@ -18,13 +18,14 @@
 		  <link rel="stylesheet" href="static/ace/css/ace-ie.css" />
 		<![endif]-->
 		<!-- inline styles related to this page -->
-		<!-- ace settings handler -->
-		<script src="static/ace/js/ace-extra.js"></script>
+		<!-- ace settings handler
+		<script src="static/ace/js/ace-extra.js"></script> -->
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 		<!--[if lte IE 8]>
 		<script src="static/ace/js/html5shiv.js"></script>
 		<script src="static/ace/js/respond.js"></script>
 		<![endif]-->
 		<script src="static/js/jquery-1.7.2.js"></script>
-		<script src="lib/angular/angular.js"></script>
+		<!-- <script src="lib/angular/angular.js"></script> -->
 		<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script> -->
+		<script src="static/ng-select2/common/plugins/angular/angular.min.js"></script>

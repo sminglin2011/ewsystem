@@ -125,7 +125,7 @@
 			    		 , render: function(data, type, row){return "<label class='pos-rel'><input type='checkbox' name='ids' value='' class='ace' /><span class='lbl'></span></label>"}
 			    	 } 
 			    	,{"title":"CN", "width": "5%", "visible":true, "mData": "accountpayable_ID"
-			    		 , render: function(data, type, row){return row +1}
+			    		 , render: function(data, type, row, meta){console.log(meta, "row");return meta.row +1;}
 			    	 }
 			    	,{"title":"AP Number", "width": "20%", "visible":true, "mData": "ap_number", orderable: true}
 			    	,{"title":"Supplier Name", "width": "30%", "visible":true, "mData": "supplier_name", orderable: true}
@@ -134,16 +134,16 @@
 		            ,{"title":"Vender Invoice", "width":"10%", "visible":true, "mData":'vender_invoice', orderable: true}
 		            ,{"title":"Action", "width":"10%", "visible":true
 		             , render: function(data, type, row) {
-		                 return '<a ng-click="show()">测试</a>';
+		                 return '<a>Edit</a>';
 		             }}
 			     ],
 			     rowCallback: function( row, data, index ) {
 			    	 // console.log('row', row, 'data', data, 'index', index);
 			    	  $(row).find('a').bind('click', function(){
 			    		  $scope.$apply(function() {
-				                $scope.show();
+				                vm.edit(data);
 				            });
-			    	  })
+			    	  });
 			     }
 		    });
 			vm.add = function() {
@@ -151,6 +151,21 @@
 					  type: 2,
 					  title: "Edit Account Payable",
 					  content: 'accountpayable/goAdd.do',
+					  success: function(layero, index){
+					    var body = layer.getChildFrame('body', index);
+					    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+					    //console.log(body.html()) //得到iframe页的body内容
+					    //body.find('input').val('Hi，我是从父页来的')
+					  }
+					});
+				layer.full(index);
+			};
+			vm.edit = function(obj) {
+				console.log("obj", obj);
+				var index = layer.open({
+					  type: 2,
+					  title: "Edit Account Payable",
+					  content: 'accountpayable/goEdit.do?accountpayable_ID='+obj.accountpayable_ID,
 					  success: function(layero, index){
 					    var body = layer.getChildFrame('body', index);
 					    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();

@@ -137,4 +137,13 @@
 	<include refid="FieldValue"></include>
 		)
 	</insert>
+	<!-- 列表 -->
+	<select id="mxList" parameterType="String" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where
+		accountpayable_ID = #{pd.accountpayable_ID}
+	</select>
 </mapper>

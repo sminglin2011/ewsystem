@@ -24,7 +24,7 @@ public class AccountPayable implements Serializable{
 	private String  vender_invoice;
 	private String  accountpayable_ID;
 	
-	private List<AccountPayableMx> mx = new ArrayList<>();
+	private List<AccountPayableMx> mx;
 
 	public String getSupplier_id() {
 		return supplier_id;

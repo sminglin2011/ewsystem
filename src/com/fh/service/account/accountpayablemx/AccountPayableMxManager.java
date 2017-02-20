@@ -37,6 +37,13 @@ public interface AccountPayableMxManager{
 	 */
 	public void edit(PageData pd)throws Exception;
 	
+	/**
+	 * 修改
+	 * @param mx
+	 * @throws Exception
+	 */
+	public void edit(AccountPayableMx mx) throws Exception;
+	
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -73,6 +80,13 @@ public interface AccountPayableMxManager{
 	 * @throws Exception
 	 */
 	public void batchInsert(List<AccountPayableMx> list) throws Exception;
+	/**
+	 * 明细列表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> mxList (String accountpayable_ID) throws Exception;
 	
 }
 

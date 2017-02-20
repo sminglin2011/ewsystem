@@ -36,7 +36,7 @@ public class ChatServer extends WebSocketServer{
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 		//this.sendToAll( "new connection: " + handshake.getResourceDescriptor() );
-		//System.out.println("===" + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+		System.out.println("===" + conn.getRemoteSocketAddress().getAddress().getHostAddress());
 	}
 
 	/**

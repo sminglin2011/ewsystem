@@ -10,17 +10,18 @@
 <html lang="en" ng-app="app" ng-controller="myCtrl as vm">
 	<head>
 	<base href="<%=basePath%>">
-	<!-- 下拉框 -->
-	<link rel="stylesheet" href="static/ace/css/chosen.css" />
+	<!-- 下拉框
+	<link rel="stylesheet" href="static/ace/css/chosen.css" /> -->
 	<!-- jsp文件头和头部 -->
 	<%@ include file="../../system/index/top.jsp"%>
 	<!-- 日期框 -->
 	<link rel="stylesheet" href="static/ace/css/datepicker.css" />
+	
 	<style type="text/css">
-	#simple-table tbody tr td {
+	#mx-table tbody tr td {
 		padding: 0;
 	}
-	#simple-table tbody tr td input
+	#mx-table tbody tr td input
 	{
 		border: 0
 	}
@@ -37,84 +38,51 @@
 				<div class="row">
 					<div class="col-xs-4">
 					<label>AP Number:</label>
-						<input type="text" name="AP_NUMBER" id="AP_NUMBER" value="${pd.AP_NUMBER}" maxlength="20" 
-								 	ng-model="vm.ap.AP_NUMBER"
+						<input type="text" name="ap_number" id="ap_number" maxlength="100" 
+								 	ng-model="vm.ap.ap_number"
 									placeholder="AP Number Auto General" title="AP Number" style="width:98%;" readonly="readonly"/>
 					</div>
 					<div class="col-xs-4">
 					<label>Vender Invoice:</label>
-						<input type="text" name="VENDER_INVOICE" id="VENDER_INVOICE" value="${pd.VENDER_INVOICE}" maxlength="50" 
-									ng-model="vm.VENDER_INVOICE"
+						<input type="text" name="vender_invoice" id="vender_invoice" maxlength="100" 
+									ng-model="vm.ap.vender_invoice"
 									placeholder="Vender Invoice" title="Vender Invoice" style="width:98%;"/>
 					</div>
 					<div class="col-xs-4">
 					<label>Date:</label>
-						<input class="span10 date-picker" name="DATE" id="DATE" value="${pd.DATE}" type="text" 
-									ng-model="vm.DATE"
-									data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="Date" title="Date" style="width:98%;"/>
+						<input class="span10 date-picker" name="date" id="date" type="text" 
+							ng-model="vm.ap.date"
+							data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="Date" title="Date" style="width:98%;"/>
 					</div>
 					<div class="col-xs-4">
 					<label>Supplier Name:</label>
-						<select class="select chosen-select form-control" data-placeholder="Select Supplier" 
-							style="vertical-align:top;width:98%;">
-										<option value="{{s.SUPPLIER_ID}}" ng-repeat="s in vm.suppliers">{{s.NAME}}</option>
-								  	</select>
+						<select select2 class="form-control" data-placeholder="Select Supplier" 
+								ng-model="vm.ap.supplier_id" ng-change="vm.selectSupplier()" style="vertical-align:top;width:98%;">
+								<option value="{{s.SUPPLIER_ID}}" ng-repeat="s in vm.suppliers">{{s.NAME}}</option>
+						  	</select>
+						  	<input type="hidden" ng-model="vm.ap.supplier_name">
 					</div>
 					<div class="col-xs-4">
 					<label>Terms:</label>
-						<input type="text" name="TERMS" id="TERMS" value="${pd.TERMS}" maxlength="10" 
-								placeholder="Terms" title="Terms" style="width:98%;"/>
+						<input type="text" name="terms" id="terms" maxlength="10" 
+							ng-model="vm.ap.terms" placeholder="Terms" title="Terms" style="width:98%;"/>
 					</div>
-					<!-- 
-					<div class="col-xs-12">
-					
-						<input type="hidden" name="ACCOUNTPAYABLE_ID" id="ACCOUNTPAYABLE_ID" value="${pd.ACCOUNTPAYABLE_ID}" ng-model="vm.ACCOUNTPAYABLE_ID"/>
-						<div id="zhongxin" style="padding-top: 13px;">
-						<table id="table_report" class="table table-striped table-bordered table-hover">
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">AP Number:</td>
-								<td><input type="text" name="AP_NUMBER" id="AP_NUMBER" value="${pd.AP_NUMBER}" maxlength="20" 
-								 	ng-model="vm.ap.AP_NUMBER"
-									placeholder="AP Number Auto General" title="AP Number" style="width:98%;" readonly="readonly"/></td>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Vender Invoice:</td>
-								<td><input type="text" name="VENDER_INVOICE" id="VENDER_INVOICE" value="${pd.VENDER_INVOICE}" maxlength="50" 
-									ng-model="vm.VENDER_INVOICE"
-									placeholder="Vender Invoice" title="Vender Invoice" style="width:98%;"/>
-								</td>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Date:</td>
-								<td><input class="span10 date-picker" name="DATE" id="DATE" value="${pd.DATE}" type="text" 
-									ng-model="vm.DATE"
-									data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="Date" title="Date" style="width:98%;"/>
-								</td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Supplier:</td>
-								<td>
-									<select class="select chosen-select form-control" data-placeholder="Select Supplier" style="vertical-align:top;width:98%;">
-										<option value="">Select Supplier</option>
-										<option value="{{s.SUPPLIER_ID}}" ng-repeat="s in vm.suppliers">{{s.NAME}}</option>
-								  	</select>
-									
-								</td>
-								<td colspan="2"></td>
-								<td style="width:75px;text-align: right;padding-top: 13px;">Terms:</td>
-								<td><input type="text" name="TERMS" id="TERMS" value="${pd.TERMS}" maxlength="10" 
-								placeholder="Terms" title="Terms" style="width:98%;"/></td>
-							</tr>
-						</table>
-						</div>
-					
-					</div> -->
-					<!-- /.col -->
 				</div>
 				<!-- /.row -->
 				<div class="space-12"></div>
 				<div class="row"> <!-- DETAILS TABLE  -->
 					<div class="col-xs-12">
 					<div style="overflow-x: scroll; scrolling: auto;width: 100%;">
-						<table id="simple-table" class="table table-striped table-bordered table-hover" >	
+						<table id="mx-table" class="table table-striped table-bordered table-hover" >	
 							<thead>
 								<tr>
+									<th class="center" width="1%">
+									<a style="cursor:pointer;" class="tooltip-success" title="Add Item" ng-click="vm.addMx()">
+									<span class="">
+										<i class="ace-icon fa fa-plus bigger-120"></i>
+									</span>
+									</a>
+									</th>
 									<th width="5%">CN</th>
 									<th width="10%">Cost Type</th>
 									<th width="30%">Description</th>
@@ -129,11 +97,17 @@
 											
 							<tbody>
 								<tr ng-repeat="var in vm.ap.mx track by var.accountpayablemx_ID">
+									<td class="center">
+									<a style="cursor:pointer;" class="tooltip-error" title="Delete" ng-click="vm.romoveMx(var)">
+									<span class="red">
+										<i class="ace-icon fa fa-times bigger-120"></i>
+									</span>
+									</a>
+									</td>
 									<td class='center'>{{$index+1}}</td>
 									<td class=''>
-										<select class="select chosen-select form-control" ng-model="var.cost_type" ng-change="vm.changeCOA(var)" 
+										<select select2 class="select form-control" ng-model="var.cost_type" ng-change="vm.changeCOA(var)" 
 											data-placeholder="Select Chart of account" style="width:100%;">
-										<option value=""></option>
 										<option value="{{coa.LEDGER_CODE}}" ng-repeat="coa in vm.coas">{{coa.DESCRIPTION}}</option>
 								  	</select>
 									</td>
@@ -167,8 +141,8 @@
 
 	<!-- 页面底部js¨ -->
 	<%@ include file="../../system/index/foot.jsp"%>
-	<!-- 下拉框 -->
-	<script src="static/ace/js/chosen.jquery.js"></script>
+	<!-- 下拉框
+	<script src="static/ace/js/chosen.jquery.js"></script> -->
 	<!-- 日期框 -->
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
@@ -186,25 +160,31 @@
 		var accountpayable_ID = getParamFromUrl("accountpayable_ID");
 		var vm = this;
 		console.log(accountpayable_ID, 'accountpayable_ID');
-		vm.ap = {};
-		if (accountpayable_ID != null) {
-			serviceFactory.fetchAllObjects('accountpayable/listSvc/'+accountpayable_ID+'/')
-            .then(function(d) { console.log('ap=pd=', d.model); vm.ap = d.model.pd;},
-            function(errResponse){
-                console.error('Error while fetching Objects on controller');
-            });
+		if (typeof (vm.ap) === 'undefined') {
+			vm.ap = {};
+			vm.ap.creditor = 20000;
+			vm.ap.mx = [];
 		}
-		vm.ap.creditor = 20000;
-		vm.ap.mx = [];
+		
 		vm.suppliers = [];
 		vm.coas = [];
 		
+		/* if edit page load object first base on id */
+		if (accountpayable_ID != null) {
+			serviceFactory.fetchAllObjects('accountpayable/listSvc/'+accountpayable_ID+'/')
+            .then(function(d) { console.log('ap=pd=', d.model); vm.ap = d.model.pd; vm.ap.mx = d.model.mx},
+            function(errResponse){
+                console.error('Error while fetching Objects on controller');
+            });
+		} else {/* new AP, init 8 items*/
+			for(var i=0; i<2; i++) {
+				pushMx(i);
+			}
+		}
+		
+		/* add in mx item */
 		function pushMx(i) {
 			vm.ap.mx.push({accountpayablemx_ID:i, cost_type:'', description:'', remarks:'', quantity:'', unit_price:'', gst_type:'', gst_rate:'',discount:''});
-		}
-		/* new AP, init 8 items*/
-		for(var i=0; i<8; i++) {
-			pushMx(i);
 		}
 		fetchAllSuppliers();
 		//fetch all Supplier
@@ -215,6 +195,16 @@
                 console.error('Error while fetching Objects on controller');
             });
 		}
+		/* select supplier */
+		vm.selectSupplier = function() {
+			angular.forEach(vm.suppliers, function(obj, i) {
+				if (obj.SUPPLIER_ID == vm.ap.supplier_id) {
+					vm.ap.supplier_name = obj.NAME;
+					vm.ap.terms = obj.AP_TERMS;
+					return false;
+				}
+			});
+		};
 		
 		fetchAllCOAs();
 		//fetch all chart of accounts
@@ -225,10 +215,11 @@
                 console.error('Error while fetching Objects on controller');
             });
 		}
-		
+		/* select cost type */
 		vm.changeCOA = function(mx) {
 			angular.forEach(vm.coas, function(obj, i) {
 				if (obj.LEDGER_CODE == mx.cost_type) {
+					mx.ledger_code = obj.LEDGER_CODE;
 					mx.gst_type = obj.GST_TYPE;
 					mx.gst_rate = obj.GST_RATE;
 					mx.description = obj.DESCRIPTION;
@@ -240,93 +231,127 @@
 			});
 			console.log('mx=', mx);
 		};
+		
+		/* close window */
 		vm.close = function(){
 			console.log("close");
 			var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
 			parent.layer.close(index); //再执行关闭 
 		};
+		/**
+		* save 
+		**/
 		vm.save = function(){
 			console.log("1vm.ap",JSON.stringify(vm.ap));
-			$http({
-	            url: 'accountpayable/saveAp',
-	            method: "POST",
-	            data: JSON.stringify(vm.ap)
-	          }
-	        ).then(function(d) { 
+			if (vm.checked()) {
+				console.log(" checked success");
+				$http({
+		            url: 'accountpayable/saveAp',
+		            method: "POST",
+		            data: JSON.stringify(vm.ap)
+		          }
+		        ).then(function(d) { 
+		        	console.log("success");
+		        	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		        	parent.location.reload();
+					parent.layer.close(index); //再执行关闭
+				},function(errResponse){
+	                console.error('Error while fetching Objects on controller');
+	            });
+			}
+			
+		};
+		
+		/* before save checking */
+		vm.checked = function() {
+			console.log("aaa", vm.ap.vender_invoice);
+			if (typeof vm.ap.vender_invoice === "undefined" || vm.ap.vend_invoice == '') {
+				angular.element("#vender_invoice").tips({
+					side:3,
+		            msg:'Vender Invoice',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				return false;
+			};
+			if (typeof vm.ap.date === 'undefined'|| vm.ap.date == "") {
+				angular.element("#date").tips({
+					side:3,
+		            msg:'Date',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				return false;
+			};
+			if (typeof vm.ap.supplier_id === 'undefined' || vm.ap.supplier_id == "") {
+				angular.element("#s2id_supplier_id").tips({
+					side:3,
+		            msg:'Supplier Name',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				return false;
+			};
+			if (typeof vm.ap.terms === 'undefined' || vm.ap.terms == "") {
+				angular.element("#terms").tips({
+					side:3,
+		            msg:'Terms',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				return false;
+			};
+			var mxresult = true;
+			for(var i=0; i< vm.ap.mx.length; i++) {
+				var mx = vm.ap.mx[i];
+				//console.log("for out ", mx.cost_type, mx.description, mx.remarks, mx.quantity);
+				if((mx.cost_type == '' || mx.cost_type == null)  &&  (mx.description != '' || mx.remarks != ''
+					|| mx.quantity != '' || mx.unit_price != '' || mx.gst_type != ''
+					|| mx.gst_rate != '' || mx.discount != '')) {
+					mxresult = false;
+					angular.element("#s2id_cost_type"+i).tips({
+						side:3,
+			            msg:'Cost Type',
+			            bg:'#AE81FF',
+			            time:2
+			        });
+					//console.log("for", mx.cost_type);
+					break;
+				}
+			};
+			return mxresult
+		}; /* vm.checked end */
+		
+		vm.addMx = function() {
+			console.log(Math.random());
+			pushMx(Math.random());
+		};
+		vm.romoveMx = function(o) {
+			serviceFactory.postData("accountpayablemx/delete", 
+					$.param({accountpayablemx_ID: o.accountpayablemx_ID}))
+			.then(function(d) { 
 	        	console.log("success");
-	        	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-				parent.layer.close(index); //再执行关闭
+	        	angular.forEach(vm.ap.mx, function(mx, i) {
+					if(mx.accountpayablemx_ID == o.accountpayablemx_ID) {
+						vm.ap.mx.splice(i, 1);
+						return false;
+					}
+				});
 			},function(errResponse){
                 console.error('Error while fetching Objects on controller');
             });
+			
+			
 		};
-	}); // end angular
-		$(top.hangge());
-		//保存
-		function save(){
-			
-			if($("#SUPPLIER_ID").val()==""){
-				$("#SUPPLIER_ID").tips({
-					side:3,
-		            msg:'请输入Supplier Name',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#SUPPLIER_ID").focus();
-			return false;
-			}
-			if($("#SUPPLIER_NAME").val()==""){
-				$("#SUPPLIER_NAME").tips({
-					side:3,
-		            msg:'请输入Supplier Name',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#SUPPLIER_NAME").focus();
-			return false;
-			}
-			if($("#DATE").val()==""){
-				$("#DATE").tips({
-					side:3,
-		            msg:'请输入Date',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#DATE").focus();
-			return false;
-			}
-			if($("#TERMS").val()==""){
-				$("#TERMS").tips({
-					side:3,
-		            msg:'请输入Terms',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#TERMS").focus();
-			return false;
-			}
-			if($("#VENDER_INVOICE").val()==""){
-				$("#VENDER_INVOICE").tips({
-					side:3,
-		            msg:'请输入Vender Invoice',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#VENDER_INVOICE").focus();
-			return false;
-			}
-			$("#Form").submit();
-			$("#zhongxin").hide();
-			$("#zhongxin2").show();
-		}
+	}); /* end angular */
+	$(top.hangge()); /* 关闭加载层 */
+	$(function() {
+		//日期框
+		$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
 		
-		$(function() {
-			//日期框
-			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
-			
-			//下拉框
-			$(".select").select2();
-		});
-		</script>
+		//下拉框
+		$(".select").select2();
+	});
+	</script>
 </body>
 </html>

@@ -53,6 +53,14 @@ public class AccountPayableMxService implements AccountPayableMxManager{
 	public void edit(PageData pd)throws Exception{
 		dao.update("AccountPayableMxMapper.edit", pd);
 	}
+	/**
+	 * 修改
+	 * @param mx
+	 * @throws Exception
+	 */
+	public void edit(AccountPayableMx mx) throws Exception{
+		dao.update("AccountPayableMxMapper.edit", mx);
+	}
 	
 	/**列表
 	 * @param page
@@ -98,6 +106,17 @@ public class AccountPayableMxService implements AccountPayableMxManager{
 
 	public void batchInsert(List<AccountPayableMx> list) throws Exception {
 		dao.batchSave("AccountPayableMxMapper.batchInsert", list);
+	}
+	
+	/**
+	 * 明细列表
+	 * @param accountpayable_ID
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> mxList (String accountpayable_ID) throws Exception{
+		return (List<PageData>)dao.findForList("AccountPayableMxMapper.mxList", accountpayable_ID);
 	}
 }
 

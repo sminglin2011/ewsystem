@@ -243,7 +243,7 @@ public class AccountPayableController extends BaseController {
 	}
 	//-------------------Retrieve One Objects--------------------------------------------------------
 		@ResponseBody
-		@RequestMapping(value="/listSvc/{accountpayable_ID}", method = RequestMethod.POST)
+		@RequestMapping(value="/listSvc/{accountpayable_ID}")
 		public Object getObjectById(Page page, HttpServletResponse response, @PathVariable("accountpayable_ID") String object_ID) throws Exception{
 			logBefore(logger, Jurisdiction.getUsername()+"获取 Account payable 单个对象");
 			//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
@@ -254,11 +254,14 @@ public class AccountPayableController extends BaseController {
 			if(null != keywords && !"".equals(keywords)){
 				pd.put("keywords", keywords.trim());
 			}
-			page.setPd(pd);
+			
 			pd.put("accountpayable_ID", object_ID);
 			System.out.println(object_ID + " = pd.accountpayable_ID=" + pd.getString("accountpayable_ID"));
 			pd = accountpayableService.findById(pd);	//返回 Object 
+			page.setPd(pd);
+			List<PageData> mx = accountpayablemxService.mxList(object_ID);
 			mv.addObject("pd", pd);
+			mv.addObject("mx", mx);
 			mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 			return JsonView.Render(mv, response);
 		}
@@ -272,24 +275,33 @@ public class AccountPayableController extends BaseController {
 		pd = this.getPageData();
 		System.out.println("ap =========== " + ap);
 		List<AccountPayableMx> list = ap.getMx();
-		List<AccountPayableMx> results = new ArrayList<>();
-		ap.setAccountpayable_ID(get32UUID());
-		accountpayableService.saveAP(ap);
-		for(AccountPayableMx mx : list) {
-			if(mx.getCost_type() != null && !mx.getCost_type().equals("")) {
-				mx.setAccountpayable_ID(ap.getAccountpayable_ID());
-				mx.setAccountpayablemx_ID(get32UUID());
-				results.add(mx);
+		
+		if (Tools.isEmpty(ap.getAccountpayable_ID())) { //新建情况下
+			ap.setAccountpayable_ID(get32UUID());
+			accountpayableService.saveAP(ap);
+			for(AccountPayableMx mx : list) {
+				if(mx.getCost_type() != null && !mx.getCost_type().equals("")) {
+					mx.setAccountpayable_ID(ap.getAccountpayable_ID());
+					mx.setAccountpayablemx_ID(get32UUID());
+					accountpayablemxService.saveAPMX(mx);
+				}
+			}
+		} else { //修改情况下
+			accountpayableService.edit(pd);
+			for(AccountPayableMx mx : list) {
+				if(!Tools.isEmpty(mx.getCost_type()) && mx.getAccountpayablemx_ID().length() < 32) { //修改情况下用户添加新的明细
+					mx.setAccountpayable_ID(ap.getAccountpayable_ID());
+					mx.setAccountpayablemx_ID(get32UUID());
+					accountpayablemxService.saveAPMX(mx);
+				} else if (!Tools.isEmpty(mx.getCost_type()) && mx.getAccountpayablemx_ID().length() == 32) {//修改情况下用户修改明细
+					accountpayablemxService.edit(mx);
+				}
 			}
 		}
-		for (AccountPayableMx mx: results) {
-			System.out.println("mx.cost_type=" + mx.getCost_type());
-			
-			accountpayablemxService.saveAPMX(mx);
-		}
+		
 		return JsonView.Render(mv, response);
     }
-  //-------------------Retrieve One Objects--------------------------------------------------------
+  //-------------------Retrieve Objects List--------------------------------------------------------
     /**列表
 	 * @param page
 	 * @throws Exception
@@ -310,12 +322,8 @@ public class AccountPayableController extends BaseController {
 		
 		page.setPd(pd);
 		List<PageData>	varList = accountpayableService.list(page);	//列出AccountPayable列表
-		
-		mv.setViewName("account/accountpayable/accountpayable_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
-		System.out.println("current result = " + page.getCurrentResult() + ""
-				+ ", total Reault = " + page.getTotalResult() +", total page =" + page.getTotalPage());
 		mv.addObject("page", page);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return JsonView.Render(mv, response);

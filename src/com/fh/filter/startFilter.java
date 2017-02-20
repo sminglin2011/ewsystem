@@ -53,6 +53,7 @@ public class startFilter extends BaseController implements Filter{
 				String strIW[] = strWEBSOCKET.split(",fh,");
 				if(strIW.length == 5){
 					s = new ChatServer(Integer.parseInt(strIW[1]));
+					System.out.println( "websocket服务器启动,端口" + s.getPort() );
 					s.start();
 				}
 			}

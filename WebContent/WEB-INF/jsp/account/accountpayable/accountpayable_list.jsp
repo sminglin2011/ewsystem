@@ -15,11 +15,11 @@
 <!-- jsp文件头和头部 -->
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
-<!--
+
 <link rel="stylesheet" href="static/snd/bootstrap/css/bootstrap.css">
- <link rel="stylesheet" href="static/snd/dataTables/media/css/jquery.dataTables.css">
+<!-- <link rel="stylesheet" href="static/snd/dataTables/media/css/jquery.dataTables.css"> -->
 <link rel="stylesheet" href="static/snd/dataTables/media/css/dataTables.bootstrap.css">
- -->
+
 
 <script type="text/javascript" src="static/snd/bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript" src="static/snd/dataTables/media/js/jquery.dataTables.js"></script>
@@ -107,24 +107,32 @@
 			var table = angular.element(".table").DataTable({
 				//responsive: true,
 				//pageLength: 3,
+				ordering:  false,
 				serverSide: true,
 			    ajax: {
-			        url: 'accountpayable/listSvc/',
+			        url: 'accountpayable/listSvcPage',
 			        dataFilter: function(data){
 			            var json = jQuery.parseJSON( data );
-			            console.log(json.model.varList, 'json');
-			            json.recordsTotal = 12;
-			            json.recordsFiltered = 10;
+			            console.log(json, 'json');
+			            json.recordsTotal = json.model.page.totalResult;
+			            json.recordsFiltered = json.model.page.totalResult;
 			            json.data = json.model.varList; 
 			            return JSON.stringify( json ); // return JSON string
 			        }
 			    },
 			    columns: [
-			    	{"title":"ID", "width": "20%", "visible":true, "mData": "accountpayable_ID"}
-			    	,{"title":"Customer Name", "width": "20%", "visible":true, "mData": "supplier_name"}
-		            ,{"title":"Contact Person", "width":"10%", "visible":true, "mData": "date"}
-		            ,{"title":"Telephone", "width":"10%", "visible":true, "mData":'terms'}
-		            ,{"title":"Action", "width":"10%", "visible":true, orderable:false
+			    	 {"title":"", "width": "5%", "visible":true, "mData": "accountpayable_ID"
+			    		 , render: function(data, type, row){return "<label class='pos-rel'><input type='checkbox' name='ids' value='' class='ace' /><span class='lbl'></span></label>"}
+			    	 } 
+			    	,{"title":"CN", "width": "5%", "visible":true, "mData": "accountpayable_ID"
+			    		 , render: function(data, type, row){return row +1}
+			    	 }
+			    	,{"title":"AP Number", "width": "20%", "visible":true, "mData": "ap_number", orderable: true}
+			    	,{"title":"Supplier Name", "width": "30%", "visible":true, "mData": "supplier_name", orderable: true}
+		            ,{"title":"Date", "width":"10%", "visible":true, "mData": "date", orderable: true}
+		            ,{"title":"Terms", "width":"10%", "visible":true, "mData":'terms', orderable: true}
+		            ,{"title":"Vender Invoice", "width":"10%", "visible":true, "mData":'vender_invoice', orderable: true}
+		            ,{"title":"Action", "width":"10%", "visible":true
 		             , render: function(data, type, row) {
 		                 return '<a ng-click="show()">测试</a>';
 		             }}

@@ -11,6 +11,11 @@
 		<link rel="stylesheet" href="static/ace/css/ace-fonts.css" />
 		<!-- ace styles -->
 		<link rel="stylesheet" href="static/ace/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+		
+		<!-- select2 -->
+    	<link rel="stylesheet" href="static/ng-select2/common/plugins/select2/select2.css" />
+    	<link rel="stylesheet" href="static/ng-select2/common/plugins/select2/select2-bootstrap.css" />
+		
 		<!--[if lte IE 9]>
 			<link rel="stylesheet" href="static/ace/css/ace-part2.css" class="ace-main-stylesheet" />
 		<![endif]-->

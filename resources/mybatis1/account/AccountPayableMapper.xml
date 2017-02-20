@@ -86,6 +86,15 @@
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
+				ap_number LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or
+				supplier_name LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or 
+				terms LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or
+				date LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or
+				vender_invoice LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				<!--	根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 

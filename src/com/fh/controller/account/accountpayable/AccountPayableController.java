@@ -214,11 +214,11 @@ public class AccountPayableController extends BaseController {
 		return mv;
 	}
 	
-//	@InitBinder
-//	public void initBinder(WebDataBinder binder){
-//		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
-//	}
+	@InitBinder
+	public void initBinder(WebDataBinder binder){
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+	}
 	
 	//-------------------Retrieve All Objects--------------------------------------------------------
 	@ResponseBody
@@ -243,7 +243,7 @@ public class AccountPayableController extends BaseController {
 	}
 	//-------------------Retrieve One Objects--------------------------------------------------------
 		@ResponseBody
-		@RequestMapping(value="/listSvc/{accountpayable_ID}")
+		@RequestMapping(value="/listSvc/{accountpayable_ID}", method = RequestMethod.POST)
 		public Object getObjectById(Page page, HttpServletResponse response, @PathVariable("accountpayable_ID") String object_ID) throws Exception{
 			logBefore(logger, Jurisdiction.getUsername()+"获取 Account payable 单个对象");
 			//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
@@ -289,5 +289,35 @@ public class AccountPayableController extends BaseController {
 		}
 		return JsonView.Render(mv, response);
     }
-    
+  //-------------------Retrieve One Objects--------------------------------------------------------
+    /**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listSvcPage")
+	public Object listPage(Page page, HttpServletResponse response) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+" angular 列表AccountPayable");
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("search[value]");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setShowCount(Integer.parseInt(pd.getString("length"))); // per page show count.
+		page.setCurrentPage(Integer.parseInt(pd.get("start").toString()));
+		
+		page.setPd(pd);
+		List<PageData>	varList = accountpayableService.list(page);	//列出AccountPayable列表
+		
+		mv.setViewName("account/accountpayable/accountpayable_list");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		System.out.println("current result = " + page.getCurrentResult() + ""
+				+ ", total Reault = " + page.getTotalResult() +", total page =" + page.getTotalPage());
+		mv.addObject("page", page);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return JsonView.Render(mv, response);
+	}
 }

@@ -35,8 +35,39 @@
 		<div class="main-content-inner">
 			<div class="page-content">
 				<div class="row">
+					<div class="col-xs-4">
+					<label>AP Number:</label>
+						<input type="text" name="AP_NUMBER" id="AP_NUMBER" value="${pd.AP_NUMBER}" maxlength="20" 
+								 	ng-model="vm.ap.AP_NUMBER"
+									placeholder="AP Number Auto General" title="AP Number" style="width:98%;" readonly="readonly"/>
+					</div>
+					<div class="col-xs-4">
+					<label>Vender Invoice:</label>
+						<input type="text" name="VENDER_INVOICE" id="VENDER_INVOICE" value="${pd.VENDER_INVOICE}" maxlength="50" 
+									ng-model="vm.VENDER_INVOICE"
+									placeholder="Vender Invoice" title="Vender Invoice" style="width:98%;"/>
+					</div>
+					<div class="col-xs-4">
+					<label>Date:</label>
+						<input class="span10 date-picker" name="DATE" id="DATE" value="${pd.DATE}" type="text" 
+									ng-model="vm.DATE"
+									data-date-format="yyyy-mm-dd" readonly="readonly" placeholder="Date" title="Date" style="width:98%;"/>
+					</div>
+					<div class="col-xs-4">
+					<label>Supplier Name:</label>
+						<select class="select chosen-select form-control" data-placeholder="Select Supplier" 
+							style="vertical-align:top;width:98%;">
+										<option value="{{s.SUPPLIER_ID}}" ng-repeat="s in vm.suppliers">{{s.NAME}}</option>
+								  	</select>
+					</div>
+					<div class="col-xs-4">
+					<label>Terms:</label>
+						<input type="text" name="TERMS" id="TERMS" value="${pd.TERMS}" maxlength="10" 
+								placeholder="Terms" title="Terms" style="width:98%;"/>
+					</div>
+					<!-- 
 					<div class="col-xs-12">
-					<form action="accountpayable/${msg }.do" name="Form" id="Form" method="post">
+					
 						<input type="hidden" name="ACCOUNTPAYABLE_ID" id="ACCOUNTPAYABLE_ID" value="${pd.ACCOUNTPAYABLE_ID}" ng-model="vm.ACCOUNTPAYABLE_ID"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
@@ -72,11 +103,12 @@
 							</tr>
 						</table>
 						</div>
-					</form>
-					</div>
+					
+					</div> -->
 					<!-- /.col -->
 				</div>
 				<!-- /.row -->
+				<div class="space-12"></div>
 				<div class="row"> <!-- DETAILS TABLE  -->
 					<div class="col-xs-12">
 					<div style="overflow-x: scroll; scrolling: auto;width: 100%;">
@@ -125,7 +157,7 @@
 	<!-- /.main-content -->
 </div>
 <!-- /.main-container -->
-
+<div class="space-5"></div>
 <footer>
 <div style="width: 100%;padding-bottom: 2px;" class="center">
 	<a class="btn btn-mini btn-primary" ng-click="vm.save();">Save</a>
@@ -141,17 +173,16 @@
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-	
+	<!-- select2 -->
+	<script src="static/ng-select2/common/plugins/select2/select2.min.js" type="text/javascript"></script>
 	<!-- SND SMING -->
 	<script src="lib/layer/2.1/layer.js"></script>
 	<script src="static/js/SND-utils.js"></script>
-	<script type="text/javascript" src="lib/app/app.js"></script>
-	<script type="text/javascript" src="lib/app/service.js"></script>
-	<script type="text/javascript" src="lib/select2-4.0.3/dist/js/select2.js"></script>
-	<link rel="stylesheet" type="text/css" href="lib/select2-4.0.3/dist/css/select2.css" />
+	<script type="text/javascript" src="static/js/snd/app.js"></script>
+	
 	<script type="text/javascript">
 	'use strict';
-	angular.module("app").controller('myCtrl', function($scope, $http, serviceFactory) {
+	app.controller('myCtrl', function($scope, $http, serviceFactory) {
 		var accountpayable_ID = getParamFromUrl("accountpayable_ID");
 		var vm = this;
 		console.log(accountpayable_ID, 'accountpayable_ID');
@@ -168,8 +199,12 @@
 		vm.suppliers = [];
 		vm.coas = [];
 		
-		for(var i=0; i<8; i++) {
+		function pushMx(i) {
 			vm.ap.mx.push({accountpayablemx_ID:i, cost_type:'', description:'', remarks:'', quantity:'', unit_price:'', gst_type:'', gst_rate:'',discount:''});
+		}
+		/* new AP, init 8 items*/
+		for(var i=0; i<8; i++) {
+			pushMx(i);
 		}
 		fetchAllSuppliers();
 		//fetch all Supplier
@@ -208,7 +243,6 @@
 		vm.close = function(){
 			console.log("close");
 			var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-			parent.reloadUrl();
 			parent.layer.close(index); //再执行关闭 
 		};
 		vm.save = function(){

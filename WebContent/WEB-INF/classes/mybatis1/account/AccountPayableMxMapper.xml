@@ -18,6 +18,8 @@
 		gst_rate,	
 		discount,	
 		ledger_code,	
+		amount,
+		gst_amount,
 		accountpayablemx_ID,
 		accountpayable_ID
 	</sql>
@@ -33,6 +35,8 @@
 		#{gst_rate},	
 		#{discount},	
 		#{ledger_code},	
+		#{amount},
+		#{gst_amount},
 		#{accountpayablemx_ID},
 		#{accountpayable_ID}
 	</sql>
@@ -55,13 +59,37 @@
 		where 
 			accountpayablemx_ID = #{accountpayablemx_ID}
 	</delete>
-	
+	<!-- 修改 -->
+	<update id="editMx" parameterType="apMx">
+		update
+		<include refid="tableName"></include>
+		set 
+		cost_type = #{cost_type},	
+		description = #{description},	
+		remarks = #{remarks},	
+		quantity = #{quantity},	
+		unit_price = #{unit_price},	
+		gst_type = #{gst_type},	
+		gst_rate = #{gst_rate},	
+		discount = #{discount},	
+		ledger_code = #{ledger_code}
+		where 
+		accountpayablemx_ID = #{accountpayablemx_ID}
+	</update>
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
 		update
 		<include refid="tableName"></include>
 		set 
-		accountpayablemx_ID = accountpayablemx_ID
+		cost_type = #{cost_type},	
+		description = #{description},	
+		remarks = #{remarks},	
+		quantity = #{quantity},	
+		unit_price = #{unit_price},	
+		gst_type = #{gst_type},	
+		gst_rate = #{gst_rate},	
+		discount = #{discount},	
+		ledger_code = #{ledger_code}
 		where 
 		accountpayablemx_ID = #{accountpayablemx_ID}
 	</update>

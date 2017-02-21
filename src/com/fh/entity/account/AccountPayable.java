@@ -21,6 +21,9 @@ public class AccountPayable implements Serializable{
 	private String  creditor;	
 	private String  date;	
 	private String  terms;	
+	private String amount;
+	private String gst_amount;
+	private String balance_amount;
 	private String  vender_invoice;
 	private String  accountpayable_ID;
 	
@@ -101,6 +104,30 @@ public class AccountPayable implements Serializable{
 
 	public void setAp_number(String ap_number) {
 		this.ap_number = ap_number;
+	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
+	public String getGst_amount() {
+		return gst_amount;
+	}
+
+	public void setGst_amount(String gst_amount) {
+		this.gst_amount = gst_amount;
+	}
+
+	public String getBalance_amount() {
+		return balance_amount;
+	}
+
+	public void setBalance_amount(String balance_amount) {
+		this.balance_amount = balance_amount;
 	}
 
 

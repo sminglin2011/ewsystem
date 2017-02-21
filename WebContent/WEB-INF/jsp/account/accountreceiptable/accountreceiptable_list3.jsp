@@ -35,11 +35,11 @@
 						<div class="clearfix">
 							<div class="pull-left tableTools-container">
 								<div class="btn-group">
-							        <label class="btn btn-xs btn-danger" ng-model="radioModel" ng-click="vm.add()">
-							        <i class="ace-icon fa fa-plus bigger-120" title="New"></i>New</label>
-							        <label class="btn btn-xs btn-success" title="Receipt" >Receipt</label>
-							        <label class="btn btn-xs btn-primary" ng-model="radioModel" >Right</label> 
-							    </div>
+					        <label class="btn btn-xs btn-danger" ng-model="radioModel" ng-click="vm.add()">
+					        <i class="ace-icon fa fa-plus bigger-120" title="New"></i>New</label>
+					        <!-- <label class="btn btn-xs btn-primary" ng-model="radioModel" >Middle</label>
+					        <label class="btn btn-xs btn-primary" ng-model="radioModel" >Right</label> -->
+					    </div>
 							</div>
 						</div>
 						<div class="table-header">
@@ -118,17 +118,15 @@
 			//fetch all chart of accounts
 			function fetchAllObjects() {
 				serviceFactory.fetchAllObjects('accountreceiptable/listSvc/')
-	            .then(function(d) { $scope.sampleData = d.model.varList; vm.QX = d.model.QX;},
+	            .then(function(d) { $scope.sampleData = d.model.varList; vm.QX = {add: d.model.QX.add, cha: d.model.QX.cha, del: d.model.QX.del, edit: d.model.QX.edit};},
 	            function(errResponse){
 	                console.error('Error while fetching Objects on controller');
 	            });
 			}
 			$scope.columns = [ 
-	            {"title":"<label class='pos-rel'><input type='checkbox' id='zcheckbox' class='ace'><span class='lbl'></span></label>"
-	            	, width:"1%", "visible":true, "mDataProp": "accountpayable_ID"
+	            {"title":"", width:"1%", "visible":true, "mDataProp": "accountpayable_ID"
 	            	, render: function(data, type, row, mate) {
-	            		return "<label class='pos-rel'>"
-	            		+"<input type='checkbox' name='ids' value='"+data+"' class='ace id' /><span class='lbl'></span></label>"
+	            		return "<label class='pos-rel'><input type='checkbox' name='ids' value='' class='ace' /><span class='lbl'></span></label>"
 	            	}
 	            }
 	            ,{"title":"AR Number", width:"15%", "visible":true, "mDataProp": "ar_number"}
@@ -137,7 +135,7 @@
 	            ,{"title":"Telephone", width:"10%", "visible":true, mDataProp:'terms', orderable:false}
 	            ,{"title":"Action", width:"10%","visible":true, orderable:false, searchable: false
 	             , render: function(data, type, row) {
-		            	 html = '<div class="btn-group">';
+		            	 html = '<div class="hidden-sm hidden-xs btn-group">';
 	              		if (vm.QX.edit == 1) {
 	              			html = html + '<a class="btn btn-xs btn-success edit" title="编辑">'
 								+ '<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>'
@@ -168,110 +166,21 @@
 		    };
 		    
 		    $scope.editFunction = function(obj) {
-		    	var index = layer.open({
-					  type: 2,
-					  title: "Edit Account Payable",
-					  content: 'accountreceiptable/goEdit.do?accountreceiptable_ID='+obj.accountreceiptable_ID,
-					  success: function(layero, index){
-					    var body = layer.getChildFrame('body', index);
-					    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-					    //console.log(body.html()) //得到iframe页的body内容
-					    //body.find('input').val('Hi，我是从父页来的')
-					  }
-					});
-				layer.full(index);
-		    };
+		    	$scope.customer = obj;
+	            backTop();
+		    }
 			$scope.delFunction = function(obj, tr) {
-				layer.confirm('Confirm Delete', {
-		    		  btn: ['Confirm'] //可以无限个按钮
-		    		}, function(index, layero){
-		    			serviceFactory.postData("accountreceiptable/delete.do", $.param({accountreceiptable_ID: obj.accountreceiptable_ID}))
-		    			.then(function(d) {
-		    				if (d.result == 'false') {
-		    					layer.msg("Please delete items first", {icon: 5, time:3000});
-		    				} else {
-		    					layer.msg("cussess", {icon: 1});
-		    					location.reload();
-		    				}
-				    	},
-			            function(errResponse){
-			                console.error('Error while fetching Objects on controller');
-			            });
-		    		});
-		    	console.log("delete obj");
-		    };
-			vm.add = function() {
-				var index = layer.open({
-					  type: 2,
-					  title: "Edit Account Payable",
-					  content: 'accountreceiptable/goAdd.do',
-					  success: function(layero, index){
-					    var body = layer.getChildFrame('body', index);
-					    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-					    //console.log(body.html()) //得到iframe页的body内容
-					    //body.find('input').val('Hi，我是从父页来的')
-					  }
-					});
-				layer.full(index);
-			};
-		});
-		//批量操作
-		function makeAll(msg){
-			bootbox.confirm(msg, function(result) {
-				if(result) {
-					var str = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  if(document.getElementsByName('ids')[i].checked){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
-					  }
-					}
-					if(str==''){
-						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
-					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>chartofaccount/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								//beforeSend: validateData,
-								cache: false,
-								success: function(data){
-									 $.each(data.list, function(i, list){
-											console.log(data);
-									 });
-								}
-							});
-						}
-					}
-				}
-			});
-		};
-		$(function(){
-			//复选框全选控制
-			var active_class = 'active';
-			$('.table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-				var th_checked = this.checked;//checkbox inside "TH" table header
-				$(this).closest('table').find('tbody > tr').each(function(){
-					var row = this;
-					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-				});
-			});
-		});
+				/* layer.msg('delete model, in development!', {icon: 5,time:2000}); */
+				console.log("deleteObj", obj);
+				/* angular.forEach($scope.sampleData, function(item, index){
+		            if (obj.id === item.id) {
+				      $scope.sampleData.splice(index, 1);
+				      return;
+				    };
+				  }); */
+				confimDelete($http, "deleteCustomer", {customerId:obj.id}, tr)
+		    }
+		})
 	</script>
 
 

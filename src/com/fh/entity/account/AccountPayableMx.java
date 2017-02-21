@@ -1,7 +1,6 @@
 package com.fh.entity.account;
 
 import lombok.Data;
-
 @Data
 public class AccountPayableMx {
 
@@ -15,6 +14,8 @@ public class AccountPayableMx {
 	private String gst_type;	
 	private String gst_rate;	
 	private String discount;	
+	private String amount;
+	private String gst_amount;
 	private String accountpayablemx_ID;
 	private String accountpayable_ID;
 	
@@ -90,6 +91,18 @@ public class AccountPayableMx {
 	}
 	public void setAccountpayable_ID(String accountpayable_ID) {
 		this.accountpayable_ID = accountpayable_ID;
+	}
+	public String getAmount() {
+		return amount;
+	}
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+	public String getGst_amount() {
+		return gst_amount;
+	}
+	public void setGst_amount(String gst_amount) {
+		this.gst_amount = gst_amount;
 	}
 	
 	

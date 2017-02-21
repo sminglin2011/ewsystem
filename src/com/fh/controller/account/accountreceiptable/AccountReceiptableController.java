@@ -71,14 +71,53 @@ public class AccountReceiptableController extends BaseController {
 		mv.setViewName("save_result");
 		return mv;
 	}
-	
+	//------------------- Save Object --------------------------------------------------------
+	/**
+	 * 保存 angular AJAX
+	 * @param response
+	 * @param ar
+	 * @return
+	 * @throws Exception
+	 */
+    @ResponseBody
+    @RequestMapping(value = "/saveAr", method = RequestMethod.POST)
+    public Object saveAccountPayable(HttpServletResponse response, @RequestBody AccountReceiptable ar) throws Exception { //ResponseEntity<Object>
+    	System.out.println("coming saving controller");
+    	ModelAndView mv = this.getModelAndView();
+		System.out.println("ar =========== " + ar);
+		List<AccountReceiptableMx> list = ar.getMx();
+		
+		if(ar.getAccountreceiptable_ID() != null) { // 修改情况下
+			accountreceiptableService.editAR(ar);
+			for(AccountReceiptableMx mx : list) {
+				if(mx.getAccountreceiptablemx_ID().length()<32 && !Tools.isEmpty(mx.getSales_type())) {
+					mx.setAccountreceiptable_ID(ar.getAccountreceiptable_ID());
+					mx.setAccountreceiptablemx_ID(get32UUID());
+					accountreceiptablemxService.saveArMx(mx);
+				} else if(mx.getAccountreceiptablemx_ID().length() == 32 && !Tools.isEmpty(mx.getSales_type())) {
+					accountreceiptablemxService.edit(mx);
+				}
+			}
+		} else { //  新建情况下
+			ar.setAccountreceiptable_ID(get32UUID());
+			accountreceiptableService.saveAr(ar);
+			for(AccountReceiptableMx mx : list) {
+				if(mx.getSales_type() != null && !mx.getSales_type().equals("")) {
+					mx.setAccountreceiptable_ID(ar.getAccountreceiptable_ID());
+					mx.setAccountreceiptablemx_ID(get32UUID());
+					accountreceiptablemxService.saveArMx(mx);
+				}
+			}
+		}
+		return JsonView.Render(mv, response);
+    }
 	/**删除
 	 * @param out
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/delete")
 	@ResponseBody
-	public Object delete() throws Exception{
+	public Object delete(HttpServletResponse response) throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"删除AccountReceiptable");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null ;} //校验权限
 		Map<String,String> map = new HashMap<String,String>();
@@ -91,7 +130,8 @@ public class AccountReceiptableController extends BaseController {
 			accountreceiptableService.delete(pd);
 		}
 		map.put("result", errInfo);
-		return AppUtil.returnObject(new PageData(), map);
+//		return AppUtil.returnObject(new PageData(), map);
+		return JsonView.Render(map, response);
 	}
 	
 	/**修改
@@ -134,7 +174,33 @@ public class AccountReceiptableController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
+	//-------------------Retrieve All Objects--------------------------------------------------------
+	/**
+	 * 列表 angular AJAX
+	 * @param page
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value="/listSvc")
+	public Object listSvc(Page page, HttpServletResponse response) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表AccountReceiptable");
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = accountreceiptableService.listAll(pd);	//列出AccountReceiptable列表
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return JsonView.Render(mv, response);
+	}
 	/**去新增页面
 	 * @param
 	 * @throws Exception
@@ -165,6 +231,37 @@ public class AccountReceiptableController extends BaseController {
 		mv.addObject("pd", pd);
 		return mv;
 	}	
+	//-------------------Retrieve One Objects--------------------------------------------------------
+	/**
+	 * 获取 AR 对象 angular AJAX
+	 * @param page
+	 * @param response
+	 * @param object_ID
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value="/listSvc/{accountreceiptable_ID}")
+	public Object getObjectById(Page page, HttpServletResponse response, 
+			@PathVariable("accountreceiptable_ID") String object_ID) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"获取 Account receiptable 单个对象");
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		pd.put("accountreceiptable_ID", object_ID);
+		pd = accountreceiptableService.findById(pd);	//返回 Object
+		page.setPd(pd);
+		List<PageData> mx = accountreceiptablemxService.mxList(object_ID);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC()); //按钮权限
+		mv.addObject("mx", mx);
+		return JsonView.Render(mv, response);
+	}
 	
 	 /**导出到excel
 	 * @param
@@ -212,59 +309,7 @@ public class AccountReceiptableController extends BaseController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
 	}
 	
-	//-------------------Retrieve One Objects--------------------------------------------------------
-	@ResponseBody
-	@RequestMapping(value="/listSvc/{accountreceiptable_ID}")
-	public Object getObjectById(Page page, HttpServletResponse response, 
-			@PathVariable("accountreceiptable_ID") String object_ID) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"获取 Account receiptable 单个对象");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
-		}
-		pd.put("accountreceiptable_ID", object_ID);
-		pd = accountreceiptableService.findById(pd);	//返回 Object
-		page.setPd(pd);
-		List<PageData> mx = accountreceiptablemxService.mxList(object_ID);
-		mv.addObject("pd", pd);
-		mv.addObject("QX",Jurisdiction.getHC()); //按钮权限
-		mv.addObject("mx", mx);
-		return JsonView.Render(mv, response);
-	}
+	//------------------- Receipt --------------------------------------------------------
 	
-	//------------------- Save Object --------------------------------------------------------
-    @ResponseBody
-    @RequestMapping(value = "/saveAr", method = RequestMethod.POST)
-    public Object saveAccountPayable(HttpServletResponse response, @RequestBody AccountReceiptable ar) throws Exception { //ResponseEntity<Object>
-    	System.out.println("coming saving controller");
-    	ModelAndView mv = this.getModelAndView();
-		System.out.println("ar =========== " + ar);
-		List<AccountReceiptableMx> list = ar.getMx();
-		List<AccountReceiptableMx> results = new ArrayList<>();
-		if(ar.getAccountreceiptable_ID() != null) { // edit
-			accountreceiptableService.editAR(ar);
-			//把原来的 mx 全删除
-			accountreceiptablemxService.deleteAll(ar.getAccountreceiptable_ID());
-		} else { //  new 
-			ar.setAccountreceiptable_ID(get32UUID());
-			accountreceiptableService.saveAr(ar);
-		}
-		
-		for(AccountReceiptableMx mx : list) {
-			if(mx.getSales_type() != null && !mx.getSales_type().equals("")) {
-				mx.setAccountreceiptable_ID(ar.getAccountreceiptable_ID());
-				mx.setAccountreceiptablemx_ID(get32UUID());
-				results.add(mx);
-			}
-		}
-		for (AccountReceiptableMx mx: results) {
-			accountreceiptablemxService.saveArMx(mx);
-		}
-		
-		return JsonView.Render(mv, response);
-    }
+	
 }

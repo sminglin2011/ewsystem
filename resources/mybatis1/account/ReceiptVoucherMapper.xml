@@ -1,40 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AccountPayableMapper">
+<mapper namespace="ReceiptVoucherMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		EW_accountpayable
+		ew_receiptvoucher
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		ap_number,	
-		supplier_id,	
-		supplier_name,	
-		creditor,	
+		receipt_from,	
 		date,	
-		terms,	
-		vender_invoice,	
-		amount,
-		gst_amount,
-		balance_amount,
-		accountpayable_ID
+		cheque_reference,	
+		bank,	
+		receipt_amount,	
+		receiptvoucher_ID
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{ap_number},	
-		#{supplier_id},	
-		#{supplier_name},	
-		#{creditor},	
+		#{receipt_from},	
 		#{date},	
-		#{terms},	
-		#{vender_invoice},
-		#{amount},
-		#{gst_amount},	
-		#{balance_amount},
-		#{accountpayable_ID}
+		#{cheque_reference},	
+		#{bank},	
+		#{receipt_amount},	
+		#{receiptvoucher_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -53,7 +43,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID = #{accountpayable_ID}
+			receiptvoucher_ID = #{receiptvoucher_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -61,15 +51,13 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			ap_number = #{ap_number},
-			supplier_name = #{supplier_name},
-			creditor = #{creditor},
+			receipt_from = #{receipt_from},
 			date = #{date},
-			terms = #{terms},
-			vender_invoice = #{vender_invoice},
-		accountpayable_ID = accountpayable_ID
+			cheque_reference = #{cheque_reference},
+			bank = #{bank},
+		receiptvoucher_ID = receiptvoucher_ID
 		where 
-		accountpayable_ID = #{accountpayable_ID}
+		receiptvoucher_ID = #{receiptvoucher_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -79,7 +67,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID = #{accountpayable_ID}
+			receiptvoucher_ID = #{receiptvoucher_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -92,15 +80,6 @@
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
-				ap_number LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				or
-				supplier_name LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				or 
-				terms LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				or
-				date LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				or
-				vender_invoice LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				<!--	根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
@@ -123,22 +102,11 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			accountpayable_ID in
+			receiptvoucher_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
 	</delete>
 	
-	<!-- sming -->
-	
-	<!-- 新增-->
-	<insert id="saveAP" parameterType="ap">
-		insert into 
-	<include refid="tableName"></include>
-		(
-	<include refid="Field"></include>
-		) values (
-	<include refid="FieldValue"></include>
-		)
-	</insert>
+	<!-- fh313596790qq(青苔) -->
 </mapper>

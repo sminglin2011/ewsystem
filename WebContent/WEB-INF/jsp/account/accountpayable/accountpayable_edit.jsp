@@ -56,8 +56,9 @@
 					</div>
 					<div class="col-xs-4">
 					<label>Supplier Name:</label>
-						<select select2 class="form-control" data-placeholder="Select Supplier" 
+						<select select2 class="form-control" data-placeholder="Select Supplier" id="supplier_id"
 								ng-model="vm.ap.supplier_id" ng-change="vm.selectSupplier()" style="vertical-align:top;width:98%;">
+								<option value=""> Select Supplier</option>
 								<option value="{{s.SUPPLIER_ID}}" ng-repeat="s in vm.suppliers">{{s.NAME}}</option>
 						  	</select>
 						  	<input type="hidden" ng-model="vm.ap.supplier_name">
@@ -106,8 +107,9 @@
 									</td>
 									<td class='center'>{{$index+1}}</td>
 									<td class=''>
-										<select select2 class="select form-control" ng-model="var.cost_type" ng-change="vm.changeCOA(var)" 
-											data-placeholder="Select Chart of account" style="width:100%;">
+										<select class="select form-control" ng-model="var.cost_type" ng-change="vm.changeCOA(var)" 
+											id="cost_type{{$index}}" data-placeholder="Select Chart of account" style="width:100%;" select2>
+										<option value="">Select Chart of accounts</option>
 										<option value="{{coa.LEDGER_CODE}}" ng-repeat="coa in vm.coas">{{coa.DESCRIPTION}}</option>
 								  	</select>
 									</td>
@@ -243,6 +245,8 @@
 		**/
 		vm.save = function(){
 			console.log("1vm.ap",JSON.stringify(vm.ap));
+			console.log('ap', vm.ap);
+			console.log('mx', vm.ap.mx);
 			if (vm.checked()) {
 				console.log(" checked success");
 				$http({
@@ -284,7 +288,7 @@
 				return false;
 			};
 			if (typeof vm.ap.supplier_id === 'undefined' || vm.ap.supplier_id == "") {
-				angular.element("#s2id_supplier_id").tips({
+				angular.element("#select2-chosen-1").tips({ //supplier_id
 					side:3,
 		            msg:'Supplier Name',
 		            bg:'#AE81FF',
@@ -309,7 +313,7 @@
 					|| mx.quantity != '' || mx.unit_price != '' || mx.gst_type != ''
 					|| mx.gst_rate != '' || mx.discount != '')) {
 					mxresult = false;
-					angular.element("#s2id_cost_type"+i).tips({
+					angular.element("#select2-chosen-"+(i+2)).tips({ // cost_type, select2 auto general ID
 						side:3,
 			            msg:'Cost Type',
 			            bg:'#AE81FF',
@@ -319,7 +323,7 @@
 					break;
 				}
 			};
-			return mxresult
+			return mxresult;
 		}; /* vm.checked end */
 		
 		vm.addMx = function() {
@@ -340,8 +344,6 @@
 			},function(errResponse){
                 console.error('Error while fetching Objects on controller');
             });
-			
-			
 		};
 	}); /* end angular */
 	$(top.hangge()); /* 关闭加载层 */

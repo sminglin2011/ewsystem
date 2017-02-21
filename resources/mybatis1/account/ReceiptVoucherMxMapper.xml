@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AccountReceiptableMxMapper">
+<mapper namespace="ReceiptVoucherMxMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		EW_accountreceiptablemx
+		ew_receiptvouchermx
 	</sql>
 	
 	<!-- 字段 -->
@@ -14,14 +14,12 @@
 		remarks,	
 		quantity,	
 		unit_price,	
+		uom,	
 		gst_type,	
 		gst_rate,	
 		discount,	
-		ledger_code,	
-		amount,
-		gst_amount,
-		accountreceiptablemx_ID,
-		accountreceiptable_ID
+		receiptvouchermx_ID,
+		receiptvoucher_ID
 	</sql>
 	
 	<!-- 字段值 -->
@@ -31,14 +29,12 @@
 		#{remarks},	
 		#{quantity},	
 		#{unit_price},	
+		#{uom},	
 		#{gst_type},	
 		#{gst_rate},	
 		#{discount},	
-		#{ledger_code},	
-		#{amount},
-		#{gst_amount},
-		#{accountreceiptablemx_ID},
-		#{accountreceiptable_ID}
+		#{receiptvouchermx_ID},
+		#{receiptvoucher_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -51,22 +47,13 @@
 	<include refid="FieldValue"></include>
 		)
 	</insert>
-	<!-- 新增-->
-	<insert id="saveArMx" parameterType="arMx">
-		insert into 
-	<include refid="tableName"></include>
-		(
-	<include refid="Field"></include>
-		) values (
-	<include refid="FieldValue"></include>
-		)
-	</insert>
+	
 	<!-- 删除-->
 	<delete id="delete" parameterType="pd">
 		delete from
 		<include refid="tableName"></include>
 		where 
-			accountreceiptablemx_ID = #{accountreceiptablemx_ID}
+			receiptvouchermx_ID = #{receiptvouchermx_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -74,26 +61,19 @@
 		update
 		<include refid="tableName"></include>
 		set 
+			sales_type = #{sales_type},
 			description = #{description},
 			remarks = #{remarks},
 			quantity = #{quantity},
 			unit_price = #{unit_price},
+			uom = #{uom},
 			gst_type = #{gst_type},
 			gst_rate = #{gst_rate},
 			discount = #{discount},
-			ledger_code = #{ledger_code},
-		accountreceiptablemx_ID = accountreceiptablemx_ID
+		receiptvouchermx_ID = receiptvouchermx_ID
 		where 
-		accountreceiptablemx_ID = #{accountreceiptablemx_ID}
+		receiptvouchermx_ID = #{receiptvouchermx_ID}
 	</update>
-	
-	<!-- delete all by zhubiao ID -->
-	<delete id="updateForDelete" parameterType="String">
-		delete from
-		<include refid="tableName"></include>
-		where 
-		accountreceiptable_ID = #{accountreceiptable_ID}
-	</delete>
 	
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
@@ -102,7 +82,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			accountreceiptablemx_ID = #{accountreceiptablemx_ID}
+			receiptvouchermx_ID = #{receiptvouchermx_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -112,7 +92,7 @@
 		from 
 		<include refid="tableName"></include>
 		where
-		accountreceiptable_ID = #{pd.accountreceiptable_ID}
+		receiptvoucher_ID = #{pd.receiptvoucher_ID}
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
@@ -138,7 +118,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			accountreceiptablemx_ID in
+			receiptvouchermx_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
@@ -151,17 +131,7 @@
 		from 
 			<include refid="tableName"></include>
 		where
-			accountreceiptable_ID = #{accountreceiptable_ID}
+			receiptvoucher_ID = #{receiptvoucher_ID}
 	</select>
 	<!-- sming -->
-
-	<!-- 列表 -->
-	<select id="mxList" parameterType="String" resultType="pd">
-		select
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
-		where
-		accountreceiptable_ID = #{pd.accountreceiptable_ID}
-	</select>
 </mapper>

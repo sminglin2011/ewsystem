@@ -53,6 +53,13 @@ public class AccountReceiptableMxService implements AccountReceiptableMxManager{
 	public void edit(PageData pd)throws Exception{
 		dao.update("AccountReceiptableMxMapper.edit", pd);
 	}
+	/**修改
+	 * @param ar
+	 * @throws Exception
+	 */
+	public void edit(AccountReceiptableMx arMx)throws Exception {
+		dao.update("AccountReceiptableMxMapper.edit", arMx);
+	}
 	
 	/**列表
 	 * @param page

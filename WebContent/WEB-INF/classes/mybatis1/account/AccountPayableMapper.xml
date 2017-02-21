@@ -16,6 +16,9 @@
 		date,	
 		terms,	
 		vender_invoice,	
+		amount,
+		gst_amount,
+		balance_amount,
 		accountpayable_ID
 	</sql>
 	
@@ -27,7 +30,10 @@
 		#{creditor},	
 		#{date},	
 		#{terms},	
-		#{vender_invoice},	
+		#{vender_invoice},
+		#{amount},
+		#{gst_amount},	
+		#{balance_amount},
 		#{accountpayable_ID}
 	</sql>
 	

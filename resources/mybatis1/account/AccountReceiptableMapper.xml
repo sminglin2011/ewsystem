@@ -16,6 +16,9 @@
 		date,	
 		terms,	
 		gl_status,	
+		amount,
+		gst_amount,
+		balance_amount,
 		accountreceiptable_ID
 	</sql>
 	
@@ -27,7 +30,10 @@
 		#{debitor},	
 		#{date},	
 		#{terms},	
-		#{gl_status},	
+		#{gl_status},
+		#{amount},
+		#{gst_amount},
+		#{balance_amount},	
 		#{accountreceiptable_ID}
 	</sql>
 	

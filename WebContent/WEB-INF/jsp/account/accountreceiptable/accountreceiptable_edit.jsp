@@ -20,6 +20,15 @@
 	<!-- select2 -->
     <link rel="stylesheet" href="static/ng-select2/common/plugins/select2/select2.css" />
     <link rel="stylesheet" href="static/ng-select2/common/plugins/select2/select2-bootstrap.css" />
+    <style type="text/css">
+	#mx-table tbody tr td {
+		padding: 0;
+	}
+	#mx-table tbody tr td input
+	{
+		border: 0
+	}
+	</style>
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
@@ -51,7 +60,7 @@
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">Customer Name:</td>
 								<td>
-									<select select2 class="form-control" data-placeholder="Select Customer" 
+									<select select2 class="form-control" data-placeholder="Select Customer" id="customer_id"
 										ng-model="vm.ar.customer_id" ng-change="vm.selectCustomer()" style="vertical-align:top;width:98%;">
 										<option value="{{s.CUSTOMER_ID}}" ng-repeat="s in vm.customers">{{s.NAME}}</option>
 								  	</select>
@@ -71,7 +80,7 @@
 				<div class="row"> <!-- DETAILS TABLE  -->
 					<div class="col-xs-12">
 					<div style="overflow-x: scroll; scrolling: auto;width: 100%;">
-						<table id="simple-table" class="table table-striped table-bordered table-hover" >	
+						<table id="mx-table" class="table table-striped table-bordered table-hover" >	
 							<thead>
 								<tr>
 									<th class="center" width="1%">
@@ -105,6 +114,7 @@
 									<td class='center'>{{$index+1}}</td>
 									<td class=''>
 										<select select2 class="select form-control" ng-model="var.sales_type" ng-change="vm.changeCOA(var)" 
+										id="sales_type{{$index}}"
 											data-placeholder="Select Chart of account" style="width:100%;">
 										<option value="{{coa.LEDGER_CODE}}" ng-repeat="coa in vm.coas">{{coa.DESCRIPTION}}</option>
 								  	</select>
@@ -176,7 +186,7 @@
 				vm.ar.mx.push({accountreceiptablemx_ID: i, sales_type:'', description:'', remarks:'', quantity:'', unit_price:'', gst_type:'', gst_rate:'',discount:''});
 			}
 			
-			for(var i=0; i<8; i++) {
+			for(var i=0; i<3; i++) {
 				pushMx(i);
 			}
 			fetchAllCustomers();
@@ -225,96 +235,95 @@
 			vm.close = function(){
 				console.log("close");
 				var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-				parent.location.reload();
 				parent.layer.close(index); //再执行关闭 
 			};
 			vm.save = function(){
-				console.log("1vm.ar",JSON.stringify(vm.ar));
-				$http({
-		            url: 'accountreceiptable/saveAr',
-		            method: "POST",
-		            data: JSON.stringify(vm.ar)
-		          }
-		        ).then(function(d) { 
-		        	console.log("success");
-		        	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-		        	parent.location.reload();
-					parent.layer.close(index); //再执行关闭
-				},function(errResponse){
-	                console.error('Error while fetching Objects on controller');
-	            });
+				if(vm.checked()) {
+					$http({
+			            url: 'accountreceiptable/saveAr',
+			            method: "POST",
+			            data: JSON.stringify(vm.ar)
+			          }
+			        ).then(function(d) { 
+			        	console.log("success");
+			        	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+			        	parent.location.reload();
+						parent.layer.close(index); //再执行关闭
+					},function(errResponse){
+		                console.error('Error while fetching Objects on controller');
+		            });
+				}
+			};
+			vm.checked = function() {
+				if (typeof vm.ar.date === "undefined" || vm.ar.date == '') {
+					angular.element("#date").tips({
+						side:3,
+			            msg:'Date',
+			            bg:'#AE81FF',
+			            time:2
+			        });
+					return false;
+				};
+				if (typeof vm.ar.customer_id === "undefined" || vm.ar.customer_id == '') {
+					angular.element("#s2id_customer_id").tips({
+						side:3,
+			            msg:'Customer Name',
+			            bg:'#AE81FF',
+			            time:2
+			        });
+					return false;
+				};
+				if (typeof vm.ar.terms === "undefined" || vm.ar.terms == '') {
+					angular.element("#terms").tips({
+						side:3,
+			            msg:'Terms',
+			            bg:'#AE81FF',
+			            time:2
+			        });
+					return false;
+				};
+				var mxresult = true;
+				for(var i=0; i< vm.ar.mx.length; i++) {
+					var mx = vm.ar.mx[i];
+					//console.log("for out ", mx.cost_type, mx.description, mx.remarks, mx.quantity);
+					if((mx.sales_type == '' || mx.sales_type == null)  &&  (mx.description != '' || mx.remarks != ''
+						|| mx.quantity != '' || mx.unit_price != '' || mx.gst_type != ''
+						|| mx.gst_rate != '' || mx.discount != '')) {
+						mxresult = false;
+						angular.element("#select2-chosen-"+(i+2)).tips({ // cost_type, select2 auto general ID
+							side:3,
+				            msg:'Cost Type',
+				            bg:'#AE81FF',
+				            time:2
+				        });
+						//console.log("for", mx.cost_type);
+						break;
+					}
+				};
+				return mxresult;
 			};
 			vm.addMx = function() {
 				pushMx(Math.random());
 				$(".select").select2();
 			};
 			vm.romoveMx = function(o) {
-				angular.forEach(vm.ar.mx, function(mx, i) {
-					if(mx.accountreceiptablemx_ID == o.accountreceiptablemx_ID) {
-						vm.ar.mx.splice(i, 1);
-						return false;
-					}
-				});
+				serviceFactory.postData("accountreceiptablemx/delete", 
+						$.param({accountreceiptablemx_ID: o.accountreceiptablemx_ID}))
+				.then(function(d) { 
+		        	console.log("success");
+		        	angular.forEach(vm.ar.mx, function(mx, i) {
+						if(mx.accountreceiptablemx_ID == o.accountreceiptablemx_ID) {
+							vm.ar.mx.splice(i, 1);
+							return false;
+						}
+					});
+				},function(errResponse){
+	                console.error('Error while fetching Objects on controller');
+	            });
 			}
 		});
 
 		$(top.hangge());
-		//保存
-		function save(){
-			if($("#ar_number").val()==""){
-				$("#ar_number").tips({
-					side:3,
-		            msg:'请输入AR Number',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#ar_number").focus();
-			return false;
-			}
-			if($("#customer_id").val()==""){
-				$("#customer_id").tips({
-					side:3,
-		            msg:'请输入Customr ID',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#customer_id").focus();
-			return false;
-			}
-			if($("#customer_name").val()==""){
-				$("#customer_name").tips({
-					side:3,
-		            msg:'请输入Customer Name',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#customer_name").focus();
-			return false;
-			}
-			if($("#date").val()==""){
-				$("#date").tips({
-					side:3,
-		            msg:'请输入Date',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#date").focus();
-			return false;
-			}
-			if($("#terms").val()==""){
-				$("#terms").tips({
-					side:3,
-		            msg:'请输入Terms',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#terms").focus();
-			return false;
-			}
-			$("#Form").submit();
-			$("#zhongxin").hide();
-			$("#zhongxin2").show();
-		}
 		
 		$(function() {
 			//日期框

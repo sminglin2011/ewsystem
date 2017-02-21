@@ -108,7 +108,7 @@ public class CreateCodeController extends BaseController {
 		String packageName = pd.getString("packageName");  			//包名				========参数1
 		String objectName = pd.getString("objectName");	   			//类名				========参数2
 		String tabletop = pd.getString("tabletop");	   				//表前缀				========参数3
-		tabletop = null == tabletop?"":tabletop.toUpperCase();		//表前缀转大写
+		tabletop = null == tabletop?"":tabletop.toLowerCase();		//表前缀转大写
 		String zindext = pd.getString("zindex");	   	   			//属性总数
 		int zindex = 0;
 		if(null != zindext && !"".equals(zindext)){
@@ -120,12 +120,12 @@ public class CreateCodeController extends BaseController {
 		}
 		Map<String,Object> root = new HashMap<String,Object>();		//创建数据模型
 		root.put("fieldList", fieldList);
-		root.put("faobject", faobject.toLowerCase());				//主附结构用，主表名 toUpperCase
+		root.put("faobject", faobject.toLowerCase());				//主附结构用，主表名 toLowerCase
 		root.put("TITLE", TITLE);									//说明
 		root.put("packageName", packageName);						//包名
 		root.put("objectName", objectName);							//类名
 		root.put("objectNameLower", objectName.toLowerCase());		//类名(全小写)
-		root.put("objectNameUpper", objectName.toLowerCase());		//类名(全大写) toUpperCase 
+		root.put("objectNameUpper", objectName.toLowerCase());		//类名(全大写) toLowerCase 
 		root.put("tabletop", tabletop);								//表前缀	
 		root.put("nowDate", new Date());							//当前日期
 		
@@ -155,9 +155,9 @@ public class CreateCodeController extends BaseController {
 		Freemarker.printFile("mapperOracleTemplate.ftl", root, "mybatis_oracle/"+packageName+"/"+objectName+"Mapper.xml", filePath, ftlPath);
 		Freemarker.printFile("mapperSqlserverTemplate.ftl", root, "mybatis_sqlserver/"+packageName+"/"+objectName+"Mapper.xml", filePath, ftlPath);
 		/*生成SQL脚本*/
-		Freemarker.printFile("mysql_SQL_Template.ftl", root, "mysql数据库脚本/"+tabletop+objectName.toUpperCase()+".sql", filePath, ftlPath);
-		Freemarker.printFile("oracle_SQL_Template.ftl", root, "oracle数据库脚本/"+tabletop+objectName.toUpperCase()+".sql", filePath, ftlPath);
-		Freemarker.printFile("sqlserver_SQL_Template.ftl", root, "sqlserver数据库脚本/"+tabletop+objectName.toUpperCase()+".sql", filePath, ftlPath);
+		Freemarker.printFile("mysql_SQL_Template.ftl", root, "mysql数据库脚本/"+tabletop+objectName.toLowerCase()+".sql", filePath, ftlPath);
+		Freemarker.printFile("oracle_SQL_Template.ftl", root, "oracle数据库脚本/"+tabletop+objectName.toLowerCase()+".sql", filePath, ftlPath);
+		Freemarker.printFile("sqlserver_SQL_Template.ftl", root, "sqlserver数据库脚本/"+tabletop+objectName.toLowerCase()+".sql", filePath, ftlPath);
 		/*生成jsp页面*/
 		Freemarker.printFile("jsp_list_Template.ftl", root, "jsp/"+packageName+"/"+objectName.toLowerCase()+"/"+objectName.toLowerCase()+"_list.jsp", filePath, ftlPath);
 		Freemarker.printFile("jsp_edit_Template.ftl", root, "jsp/"+packageName+"/"+objectName.toLowerCase()+"/"+objectName.toLowerCase()+"_edit.jsp", filePath, ftlPath);
@@ -177,7 +177,7 @@ public class CreateCodeController extends BaseController {
 	public void save(PageData pd) throws Exception{
 		pd.put("PACKAGENAME", pd.getString("packageName"));	//包名
 		pd.put("OBJECTNAME", pd.getString("objectName"));	//类名
-		pd.put("TABLENAME", pd.getString("tabletop")+",fh,"+pd.getString("objectName").toUpperCase());	//表名
+		pd.put("TABLENAME", pd.getString("tabletop")+",fh,"+pd.getString("objectName").toLowerCase());	//表名
 		pd.put("FIELDLIST", pd.getString("FIELDLIST"));		//属性集合
 		pd.put("CREATETIME", DateUtil.getTime());			//创建时间
 		pd.put("TITLE", pd.getString("TITLE"));				//说明
